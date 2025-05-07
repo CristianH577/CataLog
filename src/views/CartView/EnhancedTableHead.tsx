@@ -5,7 +5,6 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import { MouseEvent } from "react";
 import { EnhancedTableProps, ItemData } from "../../consts/types";
 
 export default function EnhancedTableHead(props: EnhancedTableProps) {
@@ -18,10 +17,9 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
     cols = [],
   } = props;
-  const createSortHandler =
-    (property: keyof ItemData) => (event: MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const createSortHandler = (property: keyof ItemData) => {
+    onRequestSort(property);
+  };
   const disabled_sort_cols = ["img", "subtotal"];
 
   return (
@@ -42,12 +40,12 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
           />
         </TableCell>
 
-        {cols.map((headCell) => {
-          const id = headCell.id;
+        {cols.map((col) => {
+          const id = col?.id;
           if (disabled_sort_cols.includes(id)) {
             return (
               <TableCell key={id} className="font-semibold">
-                {headCell.label}
+                {col?.label}
               </TableCell>
             );
           } else {
@@ -60,9 +58,9 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
                 <TableSortLabel
                   active={orderBy === id}
                   direction={orderBy === id ? order : "asc"}
-                  onClick={createSortHandler(id)}
+                  onClick={() => createSortHandler(id)}
                 >
-                  {headCell.label}
+                  {col?.label}
                   {orderBy === id ? (
                     <Box component="span" sx={visuallyHidden}>
                       {order === "desc"

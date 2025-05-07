@@ -19,7 +19,10 @@ export default function Navbar({ cartLength = 0 }) {
 
   const handleOpenDrawer = () => setOpenMenu(!openMenu);
 
-  const button_whatsapp = LINKS_CONTACT.find((link) => link.id === "wp");
+  const button_whatsapp = LINKS_CONTACT.find((link) => link.id === "wp") || {
+    label: "wp",
+    href: "#",
+  };
 
   return (
     <AppBar
@@ -72,13 +75,12 @@ export default function Navbar({ cartLength = 0 }) {
 
         <IconButton
           className=" hover:text-white hover:bg-green-400/50"
-          title={`Ir a ${button_whatsapp?.label}`}
-          //@ts-ignore
+          title={`Ir a ${button_whatsapp.label}`}
           href={button_whatsapp.href}
           target="_blank"
           rel="noreferrer"
         >
-          <button_whatsapp.icon />
+          {"icon" in button_whatsapp ? <button_whatsapp.icon /> : "wp"}
         </IconButton>
       </Toolbar>
 

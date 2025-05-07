@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent } from "react";
 import { IconType } from "react-icons";
 
 export type RouteType = {
@@ -32,10 +32,10 @@ export interface HeadCell {
 
 export interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: MouseEvent<unknown>, property: keyof ItemData) => void;
+  onRequestSort: (property: keyof ItemData) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
-  cols: [];
+  cols: HeadCell[];
 }

@@ -10,7 +10,6 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
-  Typography,
 } from "@mui/material";
 
 import { FaExternalLinkAlt } from "react-icons/fa";

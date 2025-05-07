@@ -5,14 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
-import {
-  ChangeEvent,
-  Fragment,
-  MouseEvent,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { ChangeEvent, Fragment, useEffect, useMemo, useState } from "react";
 import { ItemData, HeadCell, Order } from "../consts/types";
 import EnhancedTableToolbar from "./CartView/EnhancedTableToolbar";
 import { useOutletContext } from "react-router";
@@ -84,10 +77,7 @@ export default function CartView() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleRequestSort = (
-    event: MouseEvent<unknown>,
-    property: keyof ItemData
-  ) => {
+  const handleRequestSort = (property: keyof ItemData) => {
     const isAsc = colOrder === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setColOrder(property);

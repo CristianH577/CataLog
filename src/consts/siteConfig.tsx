@@ -1,0 +1,99 @@
+// import { IoHomeOutline } from "react-icons/io5";
+// import { MdOutlineDescription } from "react-icons/md";
+import {
+  // FaRegQuestionCircle,
+  FaSearch,
+  FaWhatsapp,
+  FaFacebook,
+  FaInstagram,
+  FaShoppingCart,
+} from "react-icons/fa";
+
+export const NAV_ITEMS = [
+  // { id: "", href: "", label: "Inicio", icon: IoHomeOutline },
+  { id: "searchView", href: "search", label: "Buscar", icon: FaSearch },
+  // {
+  //   id: "itemView",
+  //   href: "itemview",
+  //   label: "Vista de item",
+  //   icon: MdOutlineDescription,
+  // },
+  { id: "cartView", href: "cart", label: "Carrito", icon: FaShoppingCart },
+  // { id: "faqs", href: "faqs", label: "FAQs", icon: FaRegQuestionCircle },
+];
+
+export const LINKS_CONTACT = [
+  {
+    id: "wp",
+    icon: FaWhatsapp,
+    label: "Whatsapp",
+    href: "https://api.whatsapp.com/send?phone=54",
+  },
+  { id: "fb", icon: FaFacebook, label: "Facebook", href: "" },
+  { id: "ig", icon: FaInstagram, label: "Instagram", href: "" },
+];
+
+export const FILTERS_INPUTS = [
+  {
+    id: "orderBy",
+    label: "Ordenar por",
+    format: "select",
+    items: [
+      { id: "id-asc", label: "Mas antiguo" },
+      { id: "id-desc", label: "Mas reciente" },
+      { id: "label-desc", label: "Nombre 🡣" },
+      { id: "label-asc", label: "Nombre 🡡" },
+      { id: "price-asc", label: "Precio 🡣" },
+      { id: "price-desc", label: "Precio 🡡" },
+    ],
+  },
+  {
+    id: "categorie",
+    label: "Categoria",
+    format: "select",
+    items: [
+      { id: "almacen", label: "Almacen" },
+      { id: "bebidas", label: "Bebidas" },
+      { id: "frutas", label: "Frutas" },
+      { id: "higiene", label: "Higiene" },
+      { id: "limpieza", label: "Limpieza" },
+      { id: "mascotas", label: "Mascotas" },
+      { id: "otros", label: "Otros" },
+    ],
+  },
+  {
+    id: "marca",
+    label: "Marca",
+    format: "text",
+  },
+  {
+    id: "medidas",
+    label: "Medidas",
+    format: "text",
+  },
+  {
+    id: "price",
+    label: "Precio",
+    format: "number",
+  },
+  // {
+  //   id: "label",
+  //   label: "Nombre",
+  //   format: "text",
+  //   hidden: true,
+  // },
+];
+
+export const itemDataDefault = {
+  label: "Titulo",
+  price: 0,
+  info: {
+    medida: "medida",
+    color: "color",
+    materiales: "materiales",
+    marca: "Generica",
+  },
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  imgs: [],
+};

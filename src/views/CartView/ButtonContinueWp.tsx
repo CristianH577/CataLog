@@ -2,8 +2,15 @@ import { Button } from "@mui/material";
 import { FaWhatsapp } from "react-icons/fa";
 import { toPriceFormat } from "../../libs/functions";
 import { LINKS_CONTACT } from "../../consts/siteConfig";
+import { ItemData } from "../../consts/types";
 
-export default function ButtonContinueWp({ cart = {} }) {
+type TypeIButtonContinueWpProps = {
+  cart: { [key: number]: ItemData };
+};
+
+export default function ButtonContinueWp({
+  cart = {},
+}: TypeIButtonContinueWpProps) {
   const handleSend = () => {
     const link_wp = LINKS_CONTACT.find((link) => (link.id = "wp"))?.href || "";
 
@@ -13,19 +20,15 @@ export default function ButtonContinueWp({ cart = {} }) {
     let total = 0;
     Object.values(cart).forEach((item) => {
       let array = [];
-      //@ts-ignore
       const price = item?.price || 0;
-      //@ts-ignore
-      const subtotal = Number(item?.price * item?.qtt);
+      const subtotal = Number(item?.price) * Number(item?.qtt);
 
       total += subtotal;
       const price_number = toPriceFormat(price);
       const subtotal_number = toPriceFormat(subtotal);
 
-      //@ts-ignore
       array.push(item?.label + " =>");
       array.push(price_number);
-      //@ts-ignore
       array.push(`x${item?.qtt}u`);
       array.push(`= ${subtotal_number}`);
       const array_string = array.join(" ");
@@ -34,10 +37,9 @@ export default function ButtonContinueWp({ cart = {} }) {
     });
     items_msg.push("");
 
-    //@ts-ignore
-    total = toPriceFormat(total);
+    const total_str = toPriceFormat(total);
 
-    items_msg.push(`Total ${total}`);
+    items_msg.push(`Total ${total_str}`);
 
     const msg = items_msg.join("\n");
     const encoded_message = encodeURIComponent(msg);

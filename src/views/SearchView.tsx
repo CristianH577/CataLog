@@ -8,10 +8,18 @@ import { IconButton } from "@mui/material";
 import { FaFilter } from "react-icons/fa";
 import DrawerFilters from "./SearchView/DrawerFilters";
 import ItemsView from "./SearchView/ItemsView";
-import { itemDataDefault } from "../consts/siteConfig";
+import {
+  FILTERS_VALUES_DEFAULT,
+  ITEM_DATA_DEFAULT,
+} from "../consts/siteConfig";
+import {
+  TypeFilterValues,
+  ItemData,
+  TypeObjectGeneral,
+  TypeOrder,
+} from "../consts/types";
 
-const DB_ITEMS_ = DB_ITEMS.map((item) => {
-  //@ts-ignore
+const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   item.img = findItemImgs(item.id)[0];
 
   if (!item?.price) {
@@ -24,7 +32,7 @@ const DB_ITEMS_ = DB_ITEMS.map((item) => {
     item.price = price;
   }
 
-  if (!item?.description) item.description = itemDataDefault.description;
+  if (!item?.description) item.description = ITEM_DATA_DEFAULT.description;
 
   return item;
 });
@@ -32,20 +40,21 @@ const DB_ITEMS_ = DB_ITEMS.map((item) => {
 export default function SearchView() {
   const { search } = useLocation();
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<ItemData[]>([]);
   const [openDrawerFilters, setOpenDrawerFilters] = useState(false);
-  const [filtersValues, setFiltersValues] = useState({});
+  const [filtersValues, setFiltersValues] = useState<TypeFilterValues>(
+    FILTERS_VALUES_DEFAULT
+  );
 
-  const handleOpenDrawerFilters = () =>
+  const handleOpenDrawerFilters = () => {
     setOpenDrawerFilters(!openDrawerFilters);
+  };
 
   const searhItems = () => {
     let items_ = structuredClone(DB_ITEMS_);
 
-    //@ts-ignore
     if (filtersValues?.categorie) {
       items_ = items_.filter((item) => {
-        //@ts-ignore
         const categorie = filtersValues.categorie;
         if (categorie === "otros") {
           return item.categoria === categorie || !item?.categoria;
@@ -56,54 +65,52 @@ export default function SearchView() {
     }
 
     ["marca", "medidas"].forEach((filterKey) => {
-      //@ts-ignore
-      if (filtersValues?.[filterKey]) {
-        //@ts-ignore
-        const filter_value = filtersValues[filterKey];
+      if (filtersValues?.[filterKey as keyof typeof filtersValues]) {
+        const filter_value = String(
+          filtersValues[filterKey as keyof typeof filtersValues]
+        ).toLowerCase();
         items_ = items_.filter(
-          //@ts-ignore
           (item) =>
-            //@ts-ignore
-            item?.info?.[filterKey] &&
-            //@ts-ignore
-            item.info[filterKey]
-              .toLowerCase()
-              .includes(filter_value.toLowerCase())
+            item?.info &&
+            item.info?.[filterKey] &&
+            item.info[filterKey].toLowerCase().includes(filter_value)
         );
       }
     });
 
-    //@ts-ignore
     if (filtersValues?.price?.min || filtersValues?.price?.max) {
-      //@ts-ignore
-      const min = filtersValues?.price?.min;
-      //@ts-ignore
-      const max = filtersValues?.price?.max;
+      const min = Number(filtersValues?.price?.min);
+      const max = Number(filtersValues?.price?.max);
       items_ = items_.filter(
         (item) =>
-          //@ts-ignore
-          (min && item.price >= min) || (max && item.price <= max)
+          (min && Number(item.price) >= min) ||
+          (max && Number(item.price) <= max)
       );
     }
 
-    //@ts-ignore
     if (filtersValues?.text) {
       items_ = items_.filter((item) =>
-        //@ts-ignore
-        JSON.stringify(item).toLowerCase().includes(filtersValues.text)
+        JSON.stringify(item)
+          .toLowerCase()
+          .includes(filtersValues.text.toLowerCase())
       );
     }
 
-    //@ts-ignore
     if (filtersValues?.orderBy && filtersValues.orderBy !== "id-asc") {
-      //@ts-ignore
-      const [col, order] = filtersValues.orderBy.split("-");
-      //@ts-ignore
+      const [col, order] = filtersValues.orderBy.split("-") as [
+        string,
+        TypeOrder
+      ];
       items_.sort(cartItemsComparator(col, order));
     }
 
-    //@ts-ignore
     setItems(items_);
+  };
+
+  const handleSearchInputChange = (text: string) => {
+    const filters_values_ = structuredClone(filtersValues);
+    filters_values_.text = text;
+    setFiltersValues(filters_values_);
   };
 
   //paginacion
@@ -117,13 +124,14 @@ export default function SearchView() {
   useEffect(() => {
     if (search) {
       const params = new URLSearchParams(search);
-      const paramsObj = {};
-      //@ts-ignore
+      const paramsObj: TypeObjectGeneral = {};
       Array.from(params.entries()).map(([k, v]) => (paramsObj[k] = v));
 
       if ("text" in paramsObj) {
-        //@ts-ignore
-        setFiltersValues({ ...filtersValues, text: paramsObj.text });
+        const filters_values_ = structuredClone(filtersValues);
+        filters_values_.text = String(paramsObj.text);
+
+        setFiltersValues(filters_values_);
       }
     }
   }, [search]);
@@ -135,19 +143,12 @@ export default function SearchView() {
       <article className="flex items-center gap-2">
         <SearchInput
           className="border-2 border-neutral-300 hover:border-neutral-400"
-          //@ts-ignore
-          inputValue={filtersValues?.text}
-          //@ts-ignore
-          setInputValue={(text) => {
-            setFiltersValues({ ...filtersValues, text: text });
-          }}
+          inputValue={filtersValues.text}
+          setInputValue={handleSearchInputChange}
         />
 
         <IconButton
-          color={
-            //@ts-ignore
-            filtersValues?.apply ? "warning" : "default"
-          }
+          color={filtersValues.apply ? "warning" : "default"}
           onClick={handleOpenDrawerFilters}
         >
           <FaFilter />
@@ -157,7 +158,6 @@ export default function SearchView() {
           openDrawer={openDrawerFilters}
           handleOpen={handleOpenDrawerFilters}
           filtersValues={filtersValues}
-          //@ts-ignore
           setFiltersValues={setFiltersValues}
         />
       </article>
@@ -172,7 +172,6 @@ export default function SearchView() {
         </div>
       ) : (
         <ItemsView
-          //@ts-ignore
           items={visibleItems}
           totalItems={items.length}
           showMoreItems={showMoreItems}

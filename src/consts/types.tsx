@@ -1,41 +1,61 @@
-import { ChangeEvent } from "react";
 import { IconType } from "react-icons";
 
-export type RouteType = {
+export type TypeObjectGeneral = { [key: string]: string };
+
+export type TypeRoute = {
   id: string;
   label: string;
   href: string;
   icon: IconType | null;
 };
 
-//cartView
-export interface ItemData {
+export type ItemData = {
   id: number;
   label: string;
-  categoria: string;
-  description: string;
-  price: number;
-  medidas: string;
+  categoria?: string;
+  description?: string;
+  price?: number;
+  prices?: { [key: number]: number };
+  info?: { [key: string]: any | undefined };
+  info_plus?: String[];
+  subtotal?: number;
+  qtt?: number;
+  img?: string;
+  imgs?: string[];
+};
+
+export type TypeContext = {
+  cart: {
+    value: { [key: number]: ItemData };
+    set: (cart: { [key: number]: ItemData }) => {};
+    add: (item: ItemData) => {};
+  };
+};
+
+export type TypeFilterValues = {
+  text: string;
+  apply: boolean;
+  orderBy: string;
+  categorie: string;
   marca: string;
-  subtotal: number;
-  qtt: number;
-  img: string;
+  medidas: string;
+  price: {
+    min: string | number;
+    max: string | number;
+  };
+};
+
+export type TypeOrder = "asc" | "desc" | undefined;
+
+export interface TypeInputFilter {
+  id: string;
+  label: string;
+  format: string;
+  items?: { id: string; label: string }[];
 }
 
-export type Order = "asc" | "desc";
-
-export interface HeadCell {
-  id: keyof ItemData;
+export type TypeColumnTable = {
+  id: keyof ItemData | string;
   label: string;
   numeric: boolean;
-}
-
-export interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (property: keyof ItemData) => void;
-  onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-  cols: HeadCell[];
-}
+};

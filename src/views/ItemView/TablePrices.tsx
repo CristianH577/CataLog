@@ -8,8 +8,9 @@ import { toPriceFormat } from "../../libs/functions";
 import { useOutletContext } from "react-router";
 import ButtonCart from "../../components/ButtonCart";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { titleColor } from "../../libs/tvs";
+import { ItemData, TypeContext } from "../../consts/types";
 
 const cols = [
   { id: "qtt", label: "Cantidad(U)" },
@@ -18,34 +19,30 @@ const cols = [
   { id: "panel", label: "" },
 ];
 
-export default function TablePrices({ itemData = {} }) {
-  const context = useOutletContext();
-  //@ts-ignore
+type TypeITablePricesProps = {
+  itemData: ItemData;
+};
+
+export default function TablePrices({ itemData }: TypeITablePricesProps) {
+  const context: TypeContext = useOutletContext();
   const cart = context.cart.value;
-  //@ts-ignore
   const inCartGlobal = itemData.id in cart;
-  //@ts-ignore
   const qttCart = inCartGlobal ? cart[itemData.id].qtt : 0;
 
   const [qttFix, setQttFix] = useState(0);
 
-  //@ts-ignore
-  const handleChangeQttFix = (e) => {
+  const handleChangeQttFix = (e: ChangeEvent<HTMLInputElement>) => {
     const qtt = Number(e.target.value);
 
-    //@ts-ignore
     if (itemData?.prices) {
       let price = 0;
-      //@ts-ignore
       for (const umin in itemData.prices) {
         if (qtt >= Number(umin)) {
-          //@ts-ignore
           price = itemData.prices[umin];
         } else {
           break;
         }
       }
-      //@ts-ignore
       itemData.price = price;
     }
 
@@ -60,15 +57,12 @@ export default function TablePrices({ itemData = {} }) {
       if (!inCartGlobal) qtt_ = 1;
     }
 
-    //@ts-ignore
     itemData.qtt = qtt_;
 
-    //@ts-ignore
     context?.cart?.add(itemData);
   };
 
-  //@ts-ignore
-  const makeCell = (col, qtt, price) => {
+  const makeCell = (col: string, qtt: number, price: number) => {
     switch (col) {
       case "qtt":
         return qtt;
@@ -84,13 +78,10 @@ export default function TablePrices({ itemData = {} }) {
             action={() => {
               let qtt_ = 0;
               if (!inCart_) qtt_ = qtt;
-              //@ts-ignore
               itemData.qtt = qtt_;
-              //@ts-ignore
-              itemData.price = itemData.prices[qtt];
+              itemData.price = itemData.prices ? itemData.prices[qtt] : 0;
 
-              //@ts-ignore
-              context?.cart?.add(itemData);
+              context.cart.add(itemData);
             }}
           />
         );
@@ -109,10 +100,7 @@ export default function TablePrices({ itemData = {} }) {
             size: "lg",
           })} `}
         >
-          {
-            //@ts-ignore
-            toPriceFormat(itemData.price)
-          }
+          {toPriceFormat(itemData.price)}
         </span>
 
         <div className="flex gap-3 justify-center items-center">
@@ -127,54 +115,44 @@ export default function TablePrices({ itemData = {} }) {
           <ButtonCart inCart={inCartGlobal} action={handleButtonInputCart} />
         </div>
       </article>
-      {
-        //@ts-ignore
-        itemData?.prices && (
-          <TableContainer className="table-dinamic">
-            <Table
-              size="small"
-              aria-label="Tabla de precios"
-              className="max-sm:border-separate border-spacing-y-2"
-            >
-              <TableHead>
-                <TableRow>
+      {itemData?.prices && (
+        <TableContainer className="table-dinamic">
+          <Table
+            size="small"
+            aria-label="Tabla de precios"
+            className="max-sm:border-separate border-spacing-y-2"
+          >
+            <TableHead>
+              <TableRow>
+                {cols.map((col) => (
+                  <TableCell key={col.id} component="th" className="font-bold">
+                    {col.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {Object.entries(itemData.prices).map(([qtt, price]) => (
+                <TableRow
+                  key={qtt}
+                  className="max-sm:bg-blue-300/30 sm:hover:bg-violet-500/20"
+                >
                   {cols.map((col) => (
                     <TableCell
-                      key={col.id}
-                      component="th"
-                      className="font-bold"
+                      key={col.id + "-" + qtt}
+                      className="first:font-bold"
+                      data-label={col.label}
                     >
-                      {col.label}
+                      {makeCell(col.id, Number(qtt), price)}
                     </TableCell>
                   ))}
                 </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {
-                  //@ts-ignore
-                  Object.entries(itemData.prices).map(([qtt, price]) => (
-                    <TableRow
-                      key={qtt}
-                      className="max-sm:bg-blue-300/30 sm:hover:bg-violet-500/20"
-                    >
-                      {cols.map((col) => (
-                        <TableCell
-                          key={col.id + "-" + qtt}
-                          className="first:font-bold"
-                          data-label={col.label}
-                        >
-                          {makeCell(col.id, Number(qtt), price)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )
-      }
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </section>
   );
 }

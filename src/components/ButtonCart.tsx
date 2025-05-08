@@ -9,12 +9,8 @@ export default function ButtonCart({
 }) {
   return (
     <IconButton
-      color={
-        //@ts-ignore
-        inCart ? "success" : "default"
-      }
+      color={inCart ? "success" : "default"}
       className={`group${className ? " " + className : ""} ${
-        //@ts-ignore
         inCart
           ? "hover:text-red-600 hover:bg-red-500/20"
           : "hover:text-blue-600 hover:bg-blue-500/20"
@@ -23,17 +19,14 @@ export default function ButtonCart({
       title={inCart ? "Quitar del carrito" : "Agregar al carrito"}
       {...props}
     >
-      {
-        //@ts-ignore
-        inCart ? (
-          <>
-            <FaShoppingCart className="group-hover:hidden" />
-            <FaCartArrowDown className="hidden group-hover:block" />
-          </>
-        ) : (
-          <FaCartPlus />
-        )
-      }
+      {inCart ? (
+        <>
+          <FaShoppingCart className="group-hover:hidden" />
+          <FaCartArrowDown className="hidden group-hover:block" />
+        </>
+      ) : (
+        <FaCartPlus />
+      )}
     </IconButton>
   );
 }

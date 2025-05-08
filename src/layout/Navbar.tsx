@@ -43,10 +43,10 @@ export default function Navbar({ cartLength = 0 }) {
 
         <Link
           href="#"
-          className="flex-grow xs:me-4 flex gap-1"
+          className="flex-grow xs:me-4 flex gap-1 drop-shadow-sm"
           underline="none"
         >
-          <SVGLogo size={0.5} className="" />
+          <SVGLogo size={0.5} />
           <div className="hidden xs:block">
             <span
               className={titleColor({

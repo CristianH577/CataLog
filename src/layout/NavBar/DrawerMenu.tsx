@@ -24,14 +24,11 @@ export default function DrawerMenu({
   return (
     <SwipeableDrawer open={openMenu} onClose={handleOpen} onOpen={handleOpen}>
       <Box sx={{ width: 220 }} role="presentation" onClick={handleOpen}>
-        {/* <div className="px-4 py-2">
-          <Typography className={`${titleColor({ color: "yellow" })}`}>
-            Cata-Log
-          </Typography>
-          
-        </div> */}
-
-        <Link href="#" className="flex gap-1 px-4 py-2" underline="none">
+        <Link
+          href="#"
+          className="flex gap-1 px-4 py-2 drop-shadow-sm"
+          underline="none"
+        >
           <SVGLogo size={0.5} />
           <span
             className={titleColor({

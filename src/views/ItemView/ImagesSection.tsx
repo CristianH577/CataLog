@@ -1,9 +1,6 @@
 import { useState } from "react";
 
-export default function ImagesSection({
-  imgs = [],
-  //@ts-ignore
-}) {
+export default function ImagesSection({ imgs = [] }) {
   const [selectedImg, setSelectedImg] = useState(0);
 
   return (
@@ -25,7 +22,6 @@ export default function ImagesSection({
 
       <div className="sm:h-[300px] w-full flex items-center justify-center">
         <img
-          //@ts-ignore
           src={imgs[selectedImg]}
           alt="imagen principal"
           loading="lazy"

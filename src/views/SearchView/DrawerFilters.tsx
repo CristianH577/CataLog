@@ -1,4 +1,7 @@
-import { FILTERS_INPUTS } from "../../consts/siteConfig";
+import {
+  FILTERS_INPUTS,
+  FILTERS_VALUES_DEFAULT,
+} from "../../consts/siteConfig";
 
 import {
   Box,
@@ -13,40 +16,30 @@ import {
   TextField,
   IconButton,
   Button,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 import { titleColor } from "../../libs/tvs";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { TypeFilterValues, TypeInputFilter } from "../../consts/types";
 
 export default function DrawerFilters({
   openDrawer = false,
   handleOpen = () => {},
   filtersValues = {},
-  setFiltersValues = null,
+  //@ts-ignore
+  setFiltersValues = (val: TypeFilterValues) => {},
 }) {
-  const filters_values_default = {
-    apply: false,
-    orderBy: "id-asc",
-    text: "",
-    categorie: "",
-    marca: "",
-    medidas: "",
-    price: {
-      min: "",
-      max: "",
-    },
-  };
-  const [filtersValuesTemp, setFiltersValuesTemp] = useState({
-    ...filters_values_default,
+  const [filtersValuesTemp, setFiltersValuesTemp] = useState<TypeFilterValues>({
+    ...FILTERS_VALUES_DEFAULT,
     ...filtersValues,
   });
 
-  //@ts-ignore
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     const filters_values = structuredClone(filtersValuesTemp);
-    const name = e.target.name;
+    const name = e.target.name as keyof TypeFilterValues;
     const value = e.target.value;
     const type = e.target.type;
 
@@ -56,15 +49,26 @@ export default function DrawerFilters({
       filters_values[name_][key] = Number(value);
     } else {
       //@ts-ignore
-      filters_values[name] = value;
+      filters_values[name as keyof TypeFilterValues] = value;
     }
+
+    setFiltersValuesTemp(filters_values);
+  };
+
+  const handleSelectFilterChange = (e: SelectChangeEvent<any>) => {
+    const filters_values = structuredClone(filtersValuesTemp);
+    const name = e.target.name as keyof TypeFilterValues;
+    const value = e.target.value;
+
+    //@ts-ignore
+    filters_values[name] = value;
 
     setFiltersValuesTemp(filters_values);
   };
 
   const handleApply = () => {
     const fvt = structuredClone(filtersValuesTemp);
-    const fvd = structuredClone(filters_values_default);
+    const fvd = structuredClone(FILTERS_VALUES_DEFAULT);
 
     //@ts-ignore
     delete fvt.apply;
@@ -72,106 +76,62 @@ export default function DrawerFilters({
     delete fvd.apply;
 
     const isApply = JSON.stringify(fvt) !== JSON.stringify(fvd);
-    //@ts-ignore
     filtersValuesTemp.apply = isApply;
 
-    //@ts-ignore
-    setFiltersValues && setFiltersValues(structuredClone(filtersValuesTemp));
+    setFiltersValues(structuredClone(filtersValuesTemp));
     handleOpen();
   };
 
   const handleClean = () => {
-    setFiltersValuesTemp(structuredClone(filters_values_default));
-
-    setFiltersValues &&
-      //@ts-ignore
-      setFiltersValues(structuredClone(filters_values_default));
-
+    setFiltersValuesTemp(structuredClone(FILTERS_VALUES_DEFAULT));
+    setFiltersValues(structuredClone(FILTERS_VALUES_DEFAULT));
     handleOpen();
   };
 
-  const makeInput = (input: Object) => {
-    //@ts-ignore
+  const makeInput = (input: TypeInputFilter) => {
+    const id = `${input.format}-${input.id}`;
+    const labelId = `${id}-label`;
     switch (input.format) {
       case "select":
         return (
           <FormControl fullWidth variant="standard">
-            <InputLabel
-              id={
-                //@ts-ignore
-                `select-label-${input.id}`
-              }
-            >
-              {
-                //@ts-ignore
-                input.label
-              }
-            </InputLabel>
+            <InputLabel id={labelId}>{input.label}</InputLabel>
 
             <Select
-              labelId={`select-label-${
-                //@ts-ignore
-                input.id
-              }`}
-              id={`select-${
-                //@ts-ignore
-                input.id
-              }`}
-              //@ts-ignore
+              labelId={labelId}
+              id={id}
               label={input.id}
-              name={
-                //@ts-ignore
-                input.id
-              }
-              value={
-                //@ts-ignore
-                filtersValuesTemp[input.id]
-              }
+              name={input.id}
               //@ts-ignore
-              onChange={handleFilterChange}
+              value={filtersValuesTemp[input.id]}
+              onChange={handleSelectFilterChange}
             >
               <MenuItem value="">Seleccione un valor</MenuItem>
-              {
-                //@ts-ignore
+
+              {input.items &&
                 input.items.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>
-                ))
-              }
+                ))}
             </Select>
           </FormControl>
         );
       case "number":
         return (
           <div>
-            <InputLabel
-              id={
-                //@ts-ignore
-                `input-label-${input.id}`
-              }
-            >
-              {
-                //@ts-ignore
-                input.label
-              }
-            </InputLabel>
+            <InputLabel>{input.label}</InputLabel>
+
             <div className="xs:flex gap-1">
               {["min", "max"].map((key) => (
                 <TextField
                   key={key}
                   type="number"
                   className="capitalize"
-                  id={
-                    //@ts-ignore
-                    `input-${input.id}-${key}`
-                  }
-                  label={key}
                   variant="standard"
-                  name={
-                    //@ts-ignore
-                    `${input.id}-${key}`
-                  }
+                  id={`input-${input.id}-${key}`}
+                  label={key}
+                  name={`${input.id}-${key}`}
                   value={
                     //@ts-ignore
                     filtersValuesTemp[input.id][key] || ""
@@ -186,19 +146,10 @@ export default function DrawerFilters({
       default:
         return (
           <TextField
-            id={
-              //@ts-ignore
-              `input-${input.id}`
-            }
-            label={
-              //@ts-ignore
-              input.label
-            }
+            id={id}
+            label={input.label}
             variant="standard"
-            name={
-              //@ts-ignore
-              input.id
-            }
+            name={input.id}
             value={
               //@ts-ignore
               filtersValuesTemp[input.id]
@@ -219,7 +170,7 @@ export default function DrawerFilters({
     >
       <Box sx={{ width: 220 }} role="presentation">
         <div className="px-4 py-2 relative">
-          <span className={`${titleColor({ color: "blue" })}`}>Filtros</span>
+          <span className={titleColor({ color: "blue" })}>Filtros</span>
 
           <IconButton className="absolute top-1.5 right-2" onClick={handleOpen}>
             <IoIosCloseCircleOutline />

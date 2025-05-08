@@ -2,7 +2,7 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 
 import { IoSearch } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { IconButton } from "@mui/material";
@@ -42,30 +42,26 @@ export default function SearchInput({
   className = "",
   href = "",
   inputValue = "",
-  setInputValue = null,
+  setInputValue = (val: string) => {
+    val;
+  },
 }) {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
 
   const handleSearch = () => {
-    //@ts-ignore
-    setInputValue && setInputValue(searchText);
-    //@ts-ignore
+    setInputValue(searchText);
     navigate(href + "?text=" + searchText);
   };
-  //@ts-ignore
-  const handleEnter = (e) => {
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSearch();
   };
-  //@ts-ignore
-  const handlechange = (e) => {
+  const handlechange = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
-    //@ts-ignore
     setSearchText(text);
   };
   const handleClean = () => {
     setSearchText("");
-    //@ts-ignore
     navigate(href + "?text=");
   };
 
@@ -86,7 +82,6 @@ export default function SearchInput({
         placeholder="Buscar…"
         inputProps={{
           "aria-label": "buscar",
-          //@ts-ignore
           value: searchText,
           onChange: handlechange,
           name: "search-text",

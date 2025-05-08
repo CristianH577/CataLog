@@ -8,7 +8,7 @@ import Layout from "./layout/Layout";
 import NotFound from "./layout/NotFound";
 
 import { CircularProgress } from "@mui/material";
-import { RouteType } from "./consts/types";
+import { TypeRoute } from "./consts/types";
 
 // const Home = lazy(() => import("./views/Home"));
 const SearchView = lazy(() => import("./views/SearchView"));
@@ -38,7 +38,7 @@ function App() {
       <Route path="" element={<Layout />}>
         <Route index element={<SearchView />} />
 
-        {routes.map((route: RouteType) => {
+        {routes.map((route: TypeRoute) => {
           if (route.id in routesComponent) {
             return (
               <Route

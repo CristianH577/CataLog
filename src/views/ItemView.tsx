@@ -9,27 +9,28 @@ import { useLocation } from "react-router";
 import { DB_ITEMS } from "../consts/databases";
 
 import TablePrices from "./ItemView/TablePrices";
-import { itemDataDefault } from "../consts/siteConfig";
+import { ITEM_DATA_DEFAULT } from "../consts/siteConfig";
 import ImagesSection from "./ItemView/ImagesSection";
+import { ItemData, TypeObjectGeneral } from "../consts/types";
 
 export default function ItemView() {
   const { search } = useLocation();
 
-  const [itemData, setItemData] = useState({ ...itemDataDefault });
+  const [itemData, setItemData] = useState({ ...ITEM_DATA_DEFAULT });
 
   useEffect(() => {
     if (search) {
       const params = new URLSearchParams(search);
-      const paramsObj = {};
-      //@ts-ignore
+      const paramsObj: TypeObjectGeneral = {};
       Array.from(params.entries()).map(([k, v]) => (paramsObj[k] = v));
 
       if ("id" in paramsObj) {
-        const find = DB_ITEMS.find((item) => item.id === Number(paramsObj.id));
+        const find: ItemData | undefined = DB_ITEMS.find(
+          (item) => item.id === Number(paramsObj.id)
+        );
         if (find) {
           const srcs = findItemImgs(find.id);
 
-          //@ts-ignore
           if (srcs) find.imgs = srcs;
 
           //@ts-ignore

@@ -5,11 +5,12 @@ import { titleColor } from "../libs/tvs";
 import { SVGLogo } from "../assets/svgs/SVGLogo";
 
 export default function Footer() {
-  // const links = [
-  //   // { label: "Contacto", href: "#" },
-  //   { label: "FAQs", href: "#" },
-  //   { label: "Prductos", href: "#search" },
-  // ];
+  const links = [
+    // { label: "Contacto", href: "#" },
+    // { label: "FAQs", href: "#" },
+    { label: "Prductos", href: "#" },
+    { label: "Carrito", href: "#cart" },
+  ];
 
   const info = [
     { label: "Direccion", value: "Calle, Provincia, Pais" },
@@ -20,59 +21,71 @@ export default function Footer() {
 
   return (
     <footer className="bg-gradient-to-b from-primary to-primary-1 text-white p-4 pb-2 mt-8">
-      <div className="max-w-[900px] space-y-4 place-self-center w-full">
-        <span>
-          <SVGLogo size={1.3} />
-          <h1
-            className={`${titleColor({
-              color: "yellow",
-              size: "xl",
-            })}`}
-          >
-            Cata-Log
-          </h1>
-        </span>
+      <div className="max-w-[900px] place-self-center space-y-4 w-full ">
+        <div className="flex flex-col gap-2 lg:flex-row lg:gap-8 lg:py-8">
+          <span className="drop-shadow-md">
+            <SVGLogo size={1.3} />
+            <h1
+              className={`${titleColor({
+                color: "yellow",
+                size: "xl",
+              })}`}
+            >
+              Cata-Log
+            </h1>
+          </span>
 
-        {/* <section className="space-x-4 text-2xl">
-        {links.map((link) => (
-          <Link key={link.label} href={link.href} className="text-white">
-            {link.label}
-          </Link>
-        ))}
-      </section> */}
+          <section className="max-sm:space-y-4 sm:flex sm:flex-row gap-8 sm:mt-4 lg:gap-12">
+            <article className="text-2xl">
+              <h2 className="font-bold">Secciones</h2>
+              <ol>
+                {links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      underline="hover"
+                      className="text-white"
+                      title={`Ir a ${link.label}`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </article>
 
-        <section className="max-sm:space-y-4 sm:flex sm:flex-row-reverse sm:justify-end gap-8 sm:mt-4">
-          <article>
-            <h2 className="text-xl font-bold underline">Redes</h2>
-            <ol>
-              {LINKS_CONTACT.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex gap-2 items-center text-white"
-                    title={`Ir a ${item.label}`}
-                  >
-                    <item.icon /> {item.label} <FaExternalLinkAlt size={12} />
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </article>
+            <article>
+              <h2 className="text-xl font-bold">Redes</h2>
+              <ol>
+                {LINKS_CONTACT.map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex gap-2 items-center text-white"
+                      title={`Ir a ${item.label}`}
+                    >
+                      <item.icon /> {item.label} <FaExternalLinkAlt size={12} />
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </article>
 
-          <article>
-            <h2 className="text-xl font-bold underline">Contacto</h2>
-            <ol>
-              {info.map((item) => (
-                <li key={item.label}>
-                  <span className="font-semibold">{item.label}:</span>{" "}
-                  {item.value}
-                </li>
-              ))}
-            </ol>
-          </article>
-        </section>
+            <article>
+              <h2 className="text-xl font-bold">Contacto</h2>
+              <ol>
+                {info.map((item) => (
+                  <li key={item.label}>
+                    <span className="font-semibold">{item.label}:</span>{" "}
+                    {item.value}
+                  </li>
+                ))}
+              </ol>
+            </article>
+          </section>
+        </div>
 
         <Divider variant="middle" className="bg-neutral-300" />
 

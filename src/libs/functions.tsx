@@ -1,4 +1,5 @@
 import undefinedImg from "../assets/imgs/items/undefined.webp";
+import { TypeOrder } from "../consts/types";
 
 export const scrollTop = () => {
   window.scrollTo(0, 0);
@@ -43,8 +44,7 @@ export const findItemImgs = (id = 0) => {
 };
 
 //order elementos
-//@ts-ignore
-export function cartItemsComparator(col: string, order: "asc" | "desc") {
+export function cartItemsComparator(col: string, order: TypeOrder) {
   return function (a: Object, b: Object): number {
     let type = "text";
     if (["price", "id", "qtt", "subtotal"].includes(col)) type = "number";

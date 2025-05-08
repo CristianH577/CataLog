@@ -6,7 +6,13 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import { ChangeEvent, Fragment, useEffect, useMemo, useState } from "react";
-import { ItemData, HeadCell, Order } from "../consts/types";
+import {
+  ItemData,
+  TypeColumnTable,
+  TypeContext,
+  TypeObjectGeneral,
+  TypeOrder,
+} from "../consts/types";
 import EnhancedTableToolbar from "./CartView/EnhancedTableToolbar";
 import { useOutletContext } from "react-router";
 import {
@@ -19,7 +25,7 @@ import { titleColor } from "../libs/tvs";
 import ButtonContinueWp from "./CartView/ButtonContinueWp";
 import EnhancedTableHead from "./CartView/EnhancedTableHead";
 
-const cols: readonly HeadCell[] = [
+const cols: TypeColumnTable[] = [
   {
     id: "img",
     numeric: false,
@@ -63,11 +69,10 @@ const cols: readonly HeadCell[] = [
 ];
 
 export default function CartView() {
-  const context = useOutletContext();
-  //@ts-ignore
+  const context: TypeContext = useOutletContext();
   const rows = Object.values(context.cart.value);
-  // const [rows, setRows] = useState(Object.values(context.cart.value));
-  const [order, setOrder] = useState<Order>("asc");
+
+  const [order, setOrder] = useState<TypeOrder>("asc");
   const [colOrder, setColOrder] = useState<keyof ItemData>("label");
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
@@ -77,15 +82,14 @@ export default function CartView() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleRequestSort = (property: keyof ItemData) => {
-    const isAsc = colOrder === property && order === "asc";
+  const handleRequestSort = (col: keyof ItemData) => {
+    const isAsc = colOrder === col && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
-    setColOrder(property);
+    setColOrder(col);
   };
 
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      //@ts-ignore
       const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
@@ -123,81 +127,67 @@ export default function CartView() {
   };
 
   const handleDeleteRows = () => {
-    //@ts-ignore
     const cart = structuredClone(context.cart.value);
     selected.forEach((id) => {
       if (id in cart) delete cart[id];
     });
-    //@ts-ignore
     context.cart.set(cart);
     setSelected([]);
   };
 
   const visibleRows = useMemo(
     () =>
-      //@ts-ignore
-      [...Object.values(context.cart.value)]
-        //@ts-ignore
+      [...rows]
         .sort(cartItemsComparator(colOrder, order))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    //@ts-ignore
     [order, colOrder, page, rowsPerPage, context.cart.value]
   );
 
   //------------------------------
-  const makeCell = (col: string, row: Object) => {
-    //@ts-ignore
-    const val = row?.[col] || "";
-    const props = {};
+  const makeCell = (col: string, row: ItemData) => {
+    const val = row?.[col as keyof ItemData] || "";
+    const props: TypeObjectGeneral = {};
     let content = null;
 
     switch (col) {
       case "img":
         content = (
           <img
-            //@ts-ignore
-            src={val || row?.imgs?.[0]}
+            src={row.img || row?.imgs?.[0] || ""}
             className="min-w-20  max-w-32 rounded-lg"
           />
         );
         break;
       case "label":
-        //@ts-ignore
         props.id = `enhanced-table-checkbox-`;
-        //@ts-ignore
         props.padding = "none";
         break;
       case "categoria":
-        //@ts-ignore
         props.className = "capitalize";
         break;
       case "marca":
       case "medidas":
-        //@ts-ignore
         content = row?.info?.[col];
         break;
       case "price":
-        //@ts-ignore
         content = toPriceFormat(row?.price);
         break;
       case "subtotal":
-        //@ts-ignore
-        const subtotal = row?.price * row?.qtt;
+        const subtotal = Number(row?.price) * Number(row?.qtt);
         content = toPriceFormat(subtotal);
         break;
       case "qtt":
-        //@ts-ignore
         content = (
           <TextField
             type="number"
-            //@ts-ignore
             name={`qtt-${row?.id}`}
             size="small"
             label="Cantidad"
             className="w-28"
             value={val}
-            //@ts-ignore
-            onChange={(e) => handleChangeQtt(e, row.id)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChangeQtt(e, row.id)
+            }
           />
         );
         break;
@@ -210,44 +200,34 @@ export default function CartView() {
     return <TableCell {...props}>{content || val || "-"}</TableCell>;
   };
 
-  //@ts-ignore
-  const handleChangeQtt = (e, id) => {
+  const handleChangeQtt = (e: ChangeEvent<HTMLInputElement>, id: number) => {
     const qtt = Number(e.target.value);
 
-    //@ts-ignore
     const cart_ = structuredClone(context.cart.value);
     cart_[id].qtt = qtt;
 
-    //@ts-ignore
     if (cart_[id]?.prices) {
       let price = 0;
-      //@ts-ignore
       for (const umin in cart_[id].prices) {
         if (qtt >= Number(umin)) {
-          //@ts-ignore
           price = cart_[id].prices[umin];
         } else {
           break;
         }
       }
-      //@ts-ignore
       cart_[id].price = price;
     }
 
-    //@ts-ignore
     context.cart.set(cart_);
   };
 
   useEffect(() => {
     let total_ = 0;
-    //@ts-ignore
     Object.values(context.cart.value).forEach(
-      //@ts-ignore
-      (row) => (total_ += row?.price * row?.qtt)
+      (row) => (total_ += Number(row?.price) * Number(row?.qtt))
     );
 
     setTotal(total_);
-    //@ts-ignore
   }, [context.cart.value]);
 
   useEffect(scrollTop, [page]);
@@ -270,22 +250,19 @@ export default function CartView() {
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
-              orderBy={colOrder}
+              orderCol={colOrder}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
-              //@ts-ignore
               cols={cols}
             />
 
             <TableBody>
               {visibleRows.map((row) => {
-                //@ts-ignore
                 const isItemSelected = selected.includes(row.id);
 
                 return (
                   <TableRow
-                    //@ts-ignore
                     key={row.id}
                     hover
                     aria-checked={isItemSelected}
@@ -294,22 +271,15 @@ export default function CartView() {
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        //@ts-ignore
                         name={`check-${row.id}`}
                         color="primary"
                         checked={isItemSelected}
-                        //@ts-ignore
                         onClick={() => handleClick(row.id)}
                       />
                     </TableCell>
 
                     {cols.map((col) => (
-                      <Fragment key={col.id}>
-                        {
-                          //@ts-ignore
-                          makeCell(col.id, row)
-                        }
-                      </Fragment>
+                      <Fragment key={col.id}>{makeCell(col.id, row)}</Fragment>
                     ))}
                   </TableRow>
                 );
@@ -344,12 +314,7 @@ export default function CartView() {
             Total {toPriceFormat(total)}
           </div>
 
-          <ButtonContinueWp
-            cart={
-              //@ts-ignore
-              context.cart.value
-            }
-          />
+          <ButtonContinueWp cart={context.cart.value} />
         </article>
       </section>
     </main>

@@ -5,21 +5,28 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import { EnhancedTableProps, ItemData } from "../../consts/types";
+import { ItemData, TypeColumnTable, TypeOrder } from "../../consts/types";
+import { ChangeEvent } from "react";
 
-export default function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-    cols = [],
-  } = props;
-  const createSortHandler = (property: keyof ItemData) => {
-    onRequestSort(property);
-  };
+type TypeEnhancedTableProps = {
+  numSelected: number;
+  onRequestSort: (property: keyof ItemData) => void;
+  onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
+  order: TypeOrder;
+  orderCol: string;
+  rowCount: number;
+  cols: TypeColumnTable[];
+};
+
+export default function EnhancedTableHead({
+  onSelectAllClick,
+  onRequestSort,
+  order = "asc",
+  orderCol = "",
+  numSelected = 0,
+  rowCount = 0,
+  cols = [],
+}: TypeEnhancedTableProps) {
   const disabled_sort_cols = ["img", "subtotal"];
 
   return (
@@ -52,16 +59,16 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
             return (
               <TableCell
                 key={id}
-                sortDirection={orderBy === id ? order : false}
+                sortDirection={orderCol === id ? order : false}
                 className="font-semibold"
               >
                 <TableSortLabel
-                  active={orderBy === id}
-                  direction={orderBy === id ? order : "asc"}
-                  onClick={() => createSortHandler(id)}
+                  active={orderCol === id}
+                  direction={orderCol === id ? order : "asc"}
+                  onClick={() => onRequestSort(id as keyof ItemData)}
                 >
                   {col?.label}
-                  {orderBy === id ? (
+                  {orderCol === id ? (
                     <Box component="span" sx={visuallyHidden}>
                       {order === "desc"
                         ? "sorted descending"

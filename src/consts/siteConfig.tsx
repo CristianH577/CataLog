@@ -1,7 +1,4 @@
-// import { IoHomeOutline } from "react-icons/io5";
-// import { MdOutlineDescription } from "react-icons/md";
 import {
-  // FaRegQuestionCircle,
   FaSearch,
   FaWhatsapp,
   FaFacebook,
@@ -49,10 +46,10 @@ export const FILTERS_INPUTS = [
   },
   {
     id: "categorie",
-    label: "Categoria",
+    label: "Categoría",
     format: "select",
     items: [
-      { id: "almacen", label: "Almacen" },
+      { id: "almacen", label: "Almacén" },
       { id: "bebidas", label: "Bebidas" },
       { id: "frutas", label: "Frutas" },
       { id: "higiene", label: "Higiene" },
@@ -84,16 +81,30 @@ export const FILTERS_INPUTS = [
   // },
 ];
 
-export const itemDataDefault = {
+export const ITEM_DATA_DEFAULT = {
+  id: 0,
   label: "Titulo",
   price: 0,
   info: {
     medida: "medida",
     color: "color",
     materiales: "materiales",
-    marca: "Generica",
+    marca: "Genérica",
   },
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   imgs: [],
+};
+
+export const FILTERS_VALUES_DEFAULT = {
+  apply: false,
+  orderBy: "id-asc",
+  text: "",
+  categorie: "",
+  marca: "",
+  medidas: "",
+  price: {
+    min: "",
+    max: "",
+  },
 };

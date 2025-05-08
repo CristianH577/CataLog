@@ -21,14 +21,14 @@ export function useCart() {
     setCart(cart_);
   };
 
-  const removeFromCart = (id = 0) => {
-    const cart_ = structuredClone(cart);
+  // const removeFromCart = (id = 0) => {
+  //   const cart_ = structuredClone(cart);
 
-    //@ts-ignore
-    if (id in cart_) delete cart_[id];
+  //   //@ts-ignore
+  //   if (id in cart_) delete cart_[id];
 
-    setCart(cart_);
-  };
+  //   setCart(cart_);
+  // };
 
-  return { value: cart, set: setCart, add: addToCart, remove: removeFromCart };
+  return { value: cart, set: setCart, add: addToCart };
 }

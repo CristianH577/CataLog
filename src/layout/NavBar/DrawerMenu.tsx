@@ -1,5 +1,7 @@
 import { LINKS_CONTACT, NAV_ITEMS } from "../../consts/siteConfig";
 
+import { titleColor } from "../../libs/tvs";
+
 import {
   Box,
   Divider,
@@ -13,7 +15,7 @@ import {
 } from "@mui/material";
 
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { titleColor } from "../../libs/tvs";
+
 import { SVGLogo } from "../../assets/svgs/SVGLogo";
 
 export default function DrawerMenu({

@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 
-export type TypeObjectGeneral = { [key: string]: string };
+export type TypeObjectGeneral = { [key: string]: any };
 
 export type TypeRoute = {
   id: string;

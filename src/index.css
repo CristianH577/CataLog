@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+@layer base {
+  @font-face {
+    font-family: "monserrat";
+    src: url("./assets/fonts/Montserrat-Light.otf");
+    font-display: swap;
+  }
+}
+
 html {
   min-height: 100vh;
   scroll-behavior: smooth;

@@ -1,8 +1,10 @@
+import { ChangeEvent, useEffect, useState } from "react";
+
 import { styled, alpha } from "@mui/material/styles";
+
 import InputBase from "@mui/material/InputBase";
 
 import { IoSearch } from "react-icons/io5";
-import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { IconButton } from "@mui/material";
@@ -91,7 +93,7 @@ export default function SearchInput({
 
       <IconButton
         size="small"
-        className="absolute z-10 right-1 top-1.5 "
+        className="absolute z-10 right-1 top-1.5"
         onClick={handleClean}
       >
         <FaRegCircleXmark />

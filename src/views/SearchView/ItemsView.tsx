@@ -1,11 +1,14 @@
+import { useOutletContext } from "react-router";
 import { motion } from "framer-motion";
+
+import { ItemData, TypeContext } from "../../consts/types";
 
 import { toPriceFormat } from "../../libs/functions";
 import { titleColor } from "../../libs/tvs";
-import { useOutletContext } from "react-router";
-import ButtonCart from "../../components/ButtonCart";
+
 import { Button } from "@mui/material";
-import { ItemData, TypeContext } from "../../consts/types";
+
+import ButtonCart from "../../components/ButtonCart";
 
 type TypeItemsViewProps = {
   items: ItemData[];
@@ -66,17 +69,14 @@ export default function ItemsView({
               </h3>
 
               <h3
-                className={`italic text-center ${titleColor({
+                className={`text-center ${titleColor({
                   color: "blue",
-                  size: "sm",
                 })}`}
               >
                 {item.label}
               </h3>
 
-              <span
-                className={`${titleColor({ color: "yellow", size: "sm" })}`}
-              >
+              <span className={`${titleColor({ color: "yellow" })}`}>
                 {toPriceFormat(item.price)}
               </span>
             </div>

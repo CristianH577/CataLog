@@ -1,11 +1,6 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
+import { useOutletContext } from "react-router";
 import { ChangeEvent, Fragment, useEffect, useMemo, useState } from "react";
+
 import {
   ItemData,
   TypeColumnTable,
@@ -13,15 +8,24 @@ import {
   TypeObjectGeneral,
   TypeOrder,
 } from "../consts/types";
-import EnhancedTableToolbar from "./CartView/EnhancedTableToolbar";
-import { useOutletContext } from "react-router";
+
 import {
   cartItemsComparator,
   scrollTop,
   toPriceFormat,
 } from "../libs/functions";
-import { TextField } from "@mui/material";
 import { titleColor } from "../libs/tvs";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import EnhancedTableToolbar from "./CartView/EnhancedTableToolbar";
+import { TextField } from "@mui/material";
+
 import ButtonContinueWp from "./CartView/ButtonContinueWp";
 import EnhancedTableHead from "./CartView/EnhancedTableHead";
 
@@ -154,7 +158,7 @@ export default function CartView() {
         content = (
           <img
             src={row.img || row?.imgs?.[0] || ""}
-            className="min-w-20  max-w-32 rounded-lg"
+            className="min-w-20  max-w-32 rounded-lg drop-shadow-md"
           />
         );
         break;
@@ -197,7 +201,11 @@ export default function CartView() {
         break;
     }
 
-    return <TableCell {...props}>{content || val || "-"}</TableCell>;
+    return (
+      <TableCell {...props} style={{ fontFamily: "monserrat" }}>
+        {content || val || "-"}
+      </TableCell>
+    );
   };
 
   const handleChangeQtt = (e: ChangeEvent<HTMLInputElement>, id: number) => {

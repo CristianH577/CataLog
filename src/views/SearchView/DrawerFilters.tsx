@@ -1,7 +1,12 @@
+import { ChangeEvent, useState } from "react";
+
 import {
   FILTERS_INPUTS,
   FILTERS_VALUES_DEFAULT,
 } from "../../consts/siteConfig";
+import { TypeFilterValues, TypeInputFilter } from "../../consts/types";
+
+import { titleColor } from "../../libs/tvs";
 
 import {
   Box,
@@ -20,10 +25,6 @@ import {
 } from "@mui/material";
 
 import { IoIosCloseCircleOutline } from "react-icons/io";
-
-import { titleColor } from "../../libs/tvs";
-import { ChangeEvent, useState } from "react";
-import { TypeFilterValues, TypeInputFilter } from "../../consts/types";
 
 export default function DrawerFilters({
   openDrawer = false,

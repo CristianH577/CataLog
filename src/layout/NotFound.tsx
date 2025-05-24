@@ -1,5 +1,6 @@
-import { Button } from "@mui/material";
 import { titleColor } from "../libs/tvs";
+
+import { Button } from "@mui/material";
 
 export default function NotFound() {
   return (

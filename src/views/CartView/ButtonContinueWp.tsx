@@ -1,8 +1,11 @@
-import { Button } from "@mui/material";
-import { FaWhatsapp } from "react-icons/fa";
 import { toPriceFormat } from "../../libs/functions";
+
 import { LINKS_CONTACT } from "../../consts/siteConfig";
 import { ItemData } from "../../consts/types";
+
+import { Button } from "@mui/material";
+
+import { FaWhatsapp } from "react-icons/fa";
 
 type TypeIButtonContinueWpProps = {
   cart: { [key: number]: ItemData };

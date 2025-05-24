@@ -8,12 +8,19 @@ module.exports = {
       },
       colors: {
         primary: {
-          DEFAULT: "#5EA2EF",
-          1: "#0072F5",
+          DEFAULT: "#1E88E5",
+          1: "#90CAF9",
+          2: "#1565C0",
         },
         secondary: {
-          DEFAULT: "#FFB457",
-          1: "#FF705B",
+          DEFAULT: "#43A047",
+          1: "#A5D6A7",
+          2: "#2E7D32",
+        },
+        tertiary: {
+          DEFAULT: "#E0E0E0",
+          1: "#FAFAFA",
+          2: "#BDBDBD",
         },
       },
       shadow: {

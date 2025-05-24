@@ -1,17 +1,19 @@
 import { useState } from "react";
 
+import { LINKS_CONTACT } from "../consts/siteConfig";
+
+import { titleColor } from "../libs/tvs";
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import { Badge, Link } from "@mui/material";
 
 import DrawerMenu from "./NavBar/DrawerMenu";
 import SearchInput from "./NavBar/SearchInput";
 
 import { IoMenu } from "react-icons/io5";
-import { titleColor } from "../libs/tvs";
 import { FaShoppingCart } from "react-icons/fa";
-import { LINKS_CONTACT } from "../consts/siteConfig";
-import { Badge, Link } from "@mui/material";
 import { SVGLogo } from "../assets/svgs/SVGLogo";
 
 export default function Navbar({ cartLength = 0 }) {
@@ -27,7 +29,7 @@ export default function Navbar({ cartLength = 0 }) {
   return (
     <AppBar
       position="sticky"
-      className="bg-gradient-to-b bg-transparent from-primary-1 to-primary/80"
+      className="bg-gradient-to-b bg-transparent from-primary-2 to-primary/80"
     >
       <Toolbar>
         <IconButton
@@ -64,8 +66,10 @@ export default function Navbar({ cartLength = 0 }) {
           color={cartLength > 0 ? "secondary" : "default"}
           href="#cart"
           title="Ir al carrito"
-          className={`mx-1 sm:mx-2${
-            cartLength > 0 ? " text-[#FFB457] hover:text-[#FF705B]" : ""
+          className={`mx-1 sm:mx-2 ${
+            cartLength > 0
+              ? "text-[#FFB457] hover:text-[#FF705B]"
+              : "text-tertiary"
           }`}
         >
           <Badge badgeContent={cartLength} color="warning">
@@ -74,7 +78,7 @@ export default function Navbar({ cartLength = 0 }) {
         </IconButton>
 
         <IconButton
-          className=" hover:text-white hover:bg-green-400/50"
+          className="text-tertiary hover:text-white hover:bg-green-400/50"
           title={`Ir a ${button_whatsapp.label}`}
           href={button_whatsapp.href}
           target="_blank"

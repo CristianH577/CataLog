@@ -1,17 +1,10 @@
-import SearchInput from "../layout/NavBar/SearchInput";
-
-import { cartItemsComparator, findItemImgs } from "../libs/functions";
-import { DB_ITEMS } from "../consts/databases";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import { IconButton } from "@mui/material";
-import { FaFilter } from "react-icons/fa";
-import DrawerFilters from "./SearchView/DrawerFilters";
-import ItemsView from "./SearchView/ItemsView";
-import {
-  FILTERS_VALUES_DEFAULT,
-  ITEM_DATA_DEFAULT,
-} from "../consts/siteConfig";
+
+import SearchInput from "../layout/NavBar/SearchInput";
+
+import { FILTERS_VALUES_DEFAULT } from "../consts/siteConfig";
+import { DB_ITEMS } from "../consts/databases";
 import {
   TypeFilterValues,
   ItemData,
@@ -19,20 +12,29 @@ import {
   TypeOrder,
 } from "../consts/types";
 
+import { cartItemsComparator, findItemImgs } from "../libs/functions";
+
+import { IconButton } from "@mui/material";
+
+import DrawerFilters from "./SearchView/DrawerFilters";
+import ItemsView from "./SearchView/ItemsView";
+
+import { FaFilter } from "react-icons/fa";
+
 const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   item.img = findItemImgs(item.id)[0];
 
-  if (!item?.price) {
-    let price = Math.random() * 1000;
-    if (item?.prices) {
-      price = item.prices[1];
-    } else {
-      price = Math.random() * 1000;
-    }
-    item.price = price;
-  }
+  // if (!item?.price) {
+  //   let price = Math.random() * 1000;
+  //   if (item?.prices) {
+  //     price = item.prices[1];
+  //   } else {
+  //     price = Math.random() * 1000;
+  //   }
+  //   item.price = price;
+  // }
 
-  if (!item?.description) item.description = ITEM_DATA_DEFAULT.description;
+  // if (!item?.description) item.description = ITEM_DATA_DEFAULT.description;
 
   return item;
 });

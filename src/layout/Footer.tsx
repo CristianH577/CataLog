@@ -1,7 +1,11 @@
-import { Divider, Link } from "@mui/material";
 import { LINKS_CONTACT } from "../consts/siteConfig";
-import { FaExternalLinkAlt } from "react-icons/fa";
+
 import { titleColor } from "../libs/tvs";
+
+import { Divider, Link } from "@mui/material";
+
+import { FaExternalLinkAlt } from "react-icons/fa";
+
 import { SVGLogo } from "../assets/svgs/SVGLogo";
 
 export default function Footer() {
@@ -20,7 +24,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-primary to-primary-1 text-white p-4 pb-2 mt-8">
+    <footer className="bg-gradient-to-t from-primary-2 to-primary text-white p-4 pb-2 mt-8">
       <div className="max-w-[900px] place-self-center space-y-4 w-full ">
         <div className="flex flex-col gap-2 lg:flex-row lg:gap-8 lg:py-8">
           <span className="drop-shadow-md">
@@ -36,7 +40,7 @@ export default function Footer() {
           </span>
 
           <section className="max-sm:space-y-4 sm:flex sm:flex-row gap-8 sm:mt-4 lg:gap-12">
-            <article className="text-2xl">
+            <article className="text-xl">
               <h2 className="font-bold">Secciones</h2>
               <ol>
                 {links.map((link) => (

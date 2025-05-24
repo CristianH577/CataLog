@@ -25,7 +25,7 @@ export default function ImagesSection({ imgs = [] }) {
           src={imgs[selectedImg]}
           alt="imagen principal"
           loading="lazy"
-          className="object-contain h-full"
+          className="object-contain h-full drop-shadow-md"
         />
       </div>
     </section>

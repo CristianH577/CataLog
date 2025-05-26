@@ -9,7 +9,6 @@ import { titleColor } from "../../libs/tvs";
 import { Button } from "@mui/material";
 
 import ButtonCart from "../../components/ButtonCart";
-import { FaCartPlus } from "react-icons/fa";
 
 type TypeItemsViewProps = {
   items: ItemData[];

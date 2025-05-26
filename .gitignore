@@ -25,10 +25,10 @@ dist-ssr
 
 src/components/Component.tsx
 /z
+src/PDF
 
 src/views/Home
 src/views/Home.tsx
 src/assets/imgs/home
 src/assets/imgs/categories
 src/assets/imgs/place
-src/PDF

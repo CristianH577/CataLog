@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import { FaCartArrowDown, FaCartPlus, FaShoppingCart } from "react-icons/fa";
 
 export default function ButtonCart({
@@ -8,9 +8,10 @@ export default function ButtonCart({
   ...props
 }) {
   return (
-    <IconButton
-      color={inCart ? "success" : "default"}
-      className={`group${className ? " " + className : ""} ${
+    <Button
+      variant="contained"
+      color={inCart ? "success" : "primary"}
+      className={`group text-2xl${className ? " " + className : ""} ${
         inCart
           ? "hover:text-red-600 hover:bg-red-500/20"
           : "hover:text-blue-600 hover:bg-blue-500/20"
@@ -27,6 +28,6 @@ export default function ButtonCart({
       ) : (
         <FaCartPlus />
       )}
-    </IconButton>
+    </Button>
   );
 }

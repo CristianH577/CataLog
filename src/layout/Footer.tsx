@@ -102,7 +102,7 @@ export default function Footer() {
               href="https://github.com/CristianH577"
               target="_blank"
               rel="noopener noreferrer"
-              title="Ir a perfil de Github"
+              title="Ir al perfil de Github"
               className="hover:boder-b border-neutral-400 text-inherit"
             >
               <span className="font-mono">©</span>

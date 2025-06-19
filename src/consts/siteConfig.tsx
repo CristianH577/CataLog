@@ -9,12 +9,6 @@ import {
 export const NAV_ITEMS = [
   // { id: "", href: "", label: "Inicio", icon: IoHomeOutline },
   { id: "searchView", href: "search", label: "Buscar", icon: FaSearch },
-  // {
-  //   id: "itemView",
-  //   href: "itemview",
-  //   label: "Vista de item",
-  //   icon: MdOutlineDescription,
-  // },
   { id: "cartView", href: "cart", label: "Carrito", icon: FaShoppingCart },
   // { id: "faqs", href: "faqs", label: "FAQs", icon: FaRegQuestionCircle },
 ];
@@ -24,7 +18,7 @@ export const LINKS_CONTACT = [
     id: "wp",
     icon: FaWhatsapp,
     label: "Whatsapp",
-    href: "https://api.whatsapp.com/send?phone=54",
+    href: "https://api.whatsapp.com/send?phone=543813545903",
   },
   { id: "fb", icon: FaFacebook, label: "Facebook", href: "" },
   { id: "ig", icon: FaInstagram, label: "Instagram", href: "" },
@@ -73,12 +67,6 @@ export const FILTERS_INPUTS = [
     label: "Precio",
     format: "number",
   },
-  // {
-  //   id: "label",
-  //   label: "Nombre",
-  //   format: "text",
-  //   hidden: true,
-  // },
 ];
 
 export const ITEM_DATA_DEFAULT = {
@@ -97,14 +85,13 @@ export const ITEM_DATA_DEFAULT = {
 };
 
 export const FILTERS_VALUES_DEFAULT = {
-  apply: false,
-  orderBy: "id-asc",
+  apply: true,
+  page: 1,
+  orderBy: "price-asc",
   text: "",
   categorie: "",
   marca: "",
   medidas: "",
-  price: {
-    min: "",
-    max: "",
-  },
+  priceMin: undefined,
+  priceMax: undefined,
 };

@@ -22,8 +22,8 @@ export default function Layout() {
       <div className="flex-grow flex flex-col">
         <Suspense
           fallback={
-            <span className="w-full flex-grow flex items-center justify-center">
-              <CircularProgress color="secondary" />
+            <span className="w-full h-screen flex items-center justify-center">
+              <CircularProgress />
             </span>
           }
         >

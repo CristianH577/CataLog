@@ -1,5 +1,5 @@
 import undefinedImg from "../assets/imgs/items/undefined.webp";
-import { TypeOrder } from "../consts/types";
+import { ItemData, TypeFilterValues } from "../consts/types";
 
 export const scrollTop = () => {
   window.scrollTo(0, 0);
@@ -43,32 +43,47 @@ export const findItemImgs = (id = 0) => {
   return [undefinedImg];
 };
 
-//order elementos
-export function cartItemsComparator(col: string, order: TypeOrder) {
-  return function (a: Object, b: Object): number {
+export function cartItemsComparator(col: string, order: string) {
+  return function (a: ItemData, b: ItemData): number {
     let type = "text";
     if (["price", "id", "qtt", "subtotal"].includes(col)) type = "number";
 
-    //@ts-ignore
-    let val_a = a?.[col] || "";
-    //@ts-ignore
-    let val_b = b?.[col] || "";
+    let val_a = a[col as keyof ItemData] ?? "";
+    let val_b = b[col as keyof ItemData] ?? "";
 
     if (type === "text" && val_a === "") {
-      //@ts-ignore
-      val_a = a?.info?.[col] || "";
-      //@ts-ignore
-      val_b = b?.info?.[col] || "";
+      val_a = a.info ? a.info[col as keyof ItemData] ?? "" : "";
+      val_b = b.info ? b.info[col as keyof ItemData] ?? "" : "";
     }
 
     let bool = 0;
     if (type === "number") {
-      bool = val_a - val_b;
+      bool = Number(val_a) - Number(val_b);
     } else {
-      bool = val_a.localeCompare(val_b);
+      bool = String(val_a).localeCompare(String(val_b));
     }
 
     if (order === "desc") return -bool;
     return bool;
   };
 }
+
+export const getHrefSearch = (filtersValues: TypeFilterValues) => {
+  let href = "";
+  const add = [];
+  for (const key in filtersValues) {
+    if (!["apply", "page"].includes(key)) {
+      const val = filtersValues[key as keyof TypeFilterValues];
+      if (val) add.push([key, val]);
+    }
+  }
+
+  if (add.length > 0) {
+    add.forEach((e, i) => {
+      href += i === 0 ? "?" : "&";
+      href += e[0] + "=" + e[1];
+    });
+  }
+
+  return href;
+};

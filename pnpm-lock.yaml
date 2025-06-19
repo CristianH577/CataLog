@@ -47,9 +47,6 @@ importers:
       tailwind-variants:
         specifier: ^1.0.0
         version: 1.0.0(tailwindcss@4.1.4)
-      tailwindcss:
-        specifier: ^4.1.4
-        version: 4.1.4
     devDependencies:
       '@eslint/js':
         specifier: ^9.22.0
@@ -81,6 +78,9 @@ importers:
       tailwind-scrollbar:
         specifier: ^4.0.2
         version: 4.0.2(react@19.1.0)(tailwindcss@4.1.4)
+      tailwindcss:
+        specifier: ^4.1.4
+        version: 4.1.4
       typescript:
         specifier: ~5.7.2
         version: 5.7.3

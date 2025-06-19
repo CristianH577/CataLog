@@ -1,25 +1,28 @@
-import { useState } from "react";
-
-const item_data_default = { id: 0, label: "", qtt: 1, price: 0 };
+import { useEffect, useState } from "react";
+import { ItemData } from "../consts/types";
 
 export function useCart() {
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState<{ [key: number]: ItemData }>({});
 
-  const addToCart = (itemCartData = {}) => {
+  const addToCart = (itemData: ItemData) => {
     const cart_ = structuredClone(cart);
 
-    const item_ = { ...item_data_default, ...itemCartData };
-
-    if (item_.qtt) {
-      //@ts-ignore
-      cart_[item_.id] = item_;
+    if (itemData.qtt) {
+      cart_[itemData.id] = itemData;
     } else {
-      //@ts-ignore
-      if (itemCartData.id in cart_) delete cart_[itemCartData.id];
+      if (itemData.id in cart_) delete cart_[itemData.id];
     }
 
     setCart(cart_);
   };
+
+  useEffect(() => {
+    const saved = localStorage.getItem("cart");
+    if (saved) setCart(JSON.parse(saved));
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   return { value: cart, set: setCart, add: addToCart };
 }

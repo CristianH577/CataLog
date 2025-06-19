@@ -1,15 +1,17 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
 
 import {
   FILTERS_INPUTS,
   FILTERS_VALUES_DEFAULT,
 } from "../../consts/siteConfig";
-import { TypeFilterValues, TypeInputFilter } from "../../consts/types";
+import { TypeFilterValues, TypeFiltersInput } from "../../consts/types";
 
+import { getHrefSearch } from "../../libs/functions";
 import { titleColor } from "../../libs/tvs";
 
 import {
-  Box,
   Divider,
   List,
   ListItem,
@@ -25,86 +27,82 @@ import {
 } from "@mui/material";
 
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+
+interface InterfaceProps {
+  isOpen: boolean;
+  setIsOpen: (bool: React.SetStateAction<boolean>) => void;
+  filtersValues: TypeFilterValues;
+}
+
+const MotionSwipeableDrawer = motion.create(SwipeableDrawer);
+const MotionListItem = motion.create(ListItem);
+const MotionButton = motion.create(Button);
 
 export default function DrawerFilters({
-  openDrawer = false,
-  handleOpen = () => {},
-  filtersValues = {},
-  //@ts-ignore
-  setFiltersValues = (val: TypeFilterValues) => {},
-}) {
-  const [filtersValuesTemp, setFiltersValuesTemp] = useState<TypeFilterValues>({
-    ...FILTERS_VALUES_DEFAULT,
-    ...filtersValues,
-  });
+  isOpen = false,
+  setIsOpen,
+  filtersValues,
+}: InterfaceProps) {
+  const navigate = useNavigate();
+
+  const [filtersValuesTemp, setFiltersValuesTemp] = useState<TypeFilterValues>(
+    FILTERS_VALUES_DEFAULT
+  );
+
+  const onClose = () => setIsOpen(false);
 
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filters_values = structuredClone(filtersValuesTemp);
-    const name = e.target.name as keyof TypeFilterValues;
+    const filters_values_ = structuredClone(filtersValuesTemp);
+    const name = e.target.name;
     const value = e.target.value;
     const type = e.target.type;
 
-    if (type === "number") {
-      const [name_, key] = name.split("-");
-      //@ts-ignore
-      filters_values[name_][key] = Number(value);
-    } else {
-      //@ts-ignore
-      filters_values[name as keyof TypeFilterValues] = value;
-    }
+    const value_ = type === "number" ? value : Number(value);
 
-    setFiltersValuesTemp(filters_values);
+    // @ts-ignore
+    filters_values_[name] = value_;
+
+    setFiltersValuesTemp(filters_values_);
   };
 
   const handleSelectFilterChange = (e: SelectChangeEvent<any>) => {
     const filters_values = structuredClone(filtersValuesTemp);
-    const name = e.target.name as keyof TypeFilterValues;
+    const name = e.target.name;
     const value = e.target.value;
 
-    //@ts-ignore
+    // @ts-ignore
     filters_values[name] = value;
 
     setFiltersValuesTemp(filters_values);
   };
 
   const handleApply = () => {
-    const fvt = structuredClone(filtersValuesTemp);
-    const fvd = structuredClone(FILTERS_VALUES_DEFAULT);
-
-    //@ts-ignore
-    delete fvt.apply;
-    //@ts-ignore
-    delete fvd.apply;
-
-    const isApply = JSON.stringify(fvt) !== JSON.stringify(fvd);
-    filtersValuesTemp.apply = isApply;
-
-    setFiltersValues(structuredClone(filtersValuesTemp));
-    handleOpen();
+    let href = getHrefSearch(filtersValuesTemp);
+    if (href) navigate(href);
+    onClose();
   };
 
   const handleClean = () => {
     setFiltersValuesTemp(structuredClone(FILTERS_VALUES_DEFAULT));
-    setFiltersValues(structuredClone(FILTERS_VALUES_DEFAULT));
-    handleOpen();
+    onClose();
   };
 
-  const makeInput = (input: TypeInputFilter) => {
-    const id = `${input.format}-${input.id}`;
-    const labelId = `${id}-label`;
+  const makeInput = (input: TypeFiltersInput) => {
+    const id_ = `${input.format}-${input.id}`;
+    const id_label = `${id_}-label`;
     switch (input.format) {
       case "select":
         return (
           <FormControl fullWidth variant="standard">
-            <InputLabel id={labelId}>{input.label}</InputLabel>
+            <InputLabel id={id_label}>{input.label}</InputLabel>
 
             <Select
-              labelId={labelId}
-              id={id}
-              label={input.id}
+              labelId={id_label}
+              id={id_}
+              label={input.label}
               name={input.id}
-              //@ts-ignore
-              value={filtersValuesTemp[input.id]}
+              value={filtersValuesTemp[input.id as keyof TypeFilterValues]}
               onChange={handleSelectFilterChange}
             >
               <MenuItem value="">Seleccione un valor</MenuItem>
@@ -124,22 +122,23 @@ export default function DrawerFilters({
             <InputLabel>{input.label}</InputLabel>
 
             <div className="xs:flex gap-1">
-              {["min", "max"].map((key) => (
-                <TextField
-                  key={key}
-                  type="number"
-                  className="capitalize"
-                  variant="standard"
-                  id={`input-${input.id}-${key}`}
-                  label={key}
-                  name={`${input.id}-${key}`}
-                  value={
-                    //@ts-ignore
-                    filtersValuesTemp[input.id][key] || ""
-                  }
-                  onChange={handleFilterChange}
-                />
-              ))}
+              {["Min", "Max"].map((key) => {
+                const key_ = input.id + key;
+                const value = filtersValuesTemp[key_ as keyof TypeFilterValues];
+                return (
+                  <TextField
+                    key={key}
+                    type="number"
+                    className="capitalize"
+                    variant="standard"
+                    id={`input-${input.id}-${key}`}
+                    label={key}
+                    name={`${input.id}-${key}`}
+                    value={value ? String(value) : ""}
+                    onChange={handleFilterChange}
+                  />
+                );
+              })}
             </div>
           </div>
         );
@@ -147,33 +146,55 @@ export default function DrawerFilters({
       default:
         return (
           <TextField
-            id={id}
+            id={id_}
             label={input.label}
             variant="standard"
             name={input.id}
-            value={
-              //@ts-ignore
-              filtersValuesTemp[input.id]
-            }
+            value={filtersValuesTemp[input.id as keyof TypeFilterValues] ?? ""}
             onChange={handleFilterChange}
           />
         );
     }
   };
 
-  return (
-    <SwipeableDrawer
-      anchor="right"
-      open={openDrawer}
-      onClose={handleOpen}
-      onOpen={handleOpen}
-      variant="temporary"
-    >
-      <Box sx={{ width: 220 }} role="presentation">
-        <div className="px-4 py-2 relative">
-          <span className={titleColor({ color: "blue" })}>Filtros</span>
+  useEffect(() => {
+    const filters_values_ = { ...filtersValuesTemp, ...filtersValues };
 
-          <IconButton className="absolute top-1.5 right-2" onClick={handleOpen}>
+    setFiltersValuesTemp(filters_values_);
+  }, [filtersValues]);
+
+  return (
+    <MotionSwipeableDrawer
+      anchor="right"
+      open={isOpen}
+      onClose={onClose}
+      onOpen={() => setIsOpen(true)}
+      variant="temporary"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            delayChildren: 0.1,
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+      initial="hidden"
+      animate={isOpen ? "visible" : "hidden"}
+    >
+      <section className="w-full xs:max-w-64 px-4">
+        <div className="py-4 relative">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1 },
+            }}
+            className={titleColor({ color: "blue" })}
+          >
+            Filtros
+          </motion.div>
+
+          <IconButton className="absolute top-1.5 right-2" onClick={onClose}>
             <IoIosCloseCircleOutline />
           </IconButton>
         </div>
@@ -182,22 +203,48 @@ export default function DrawerFilters({
 
         <List>
           {FILTERS_INPUTS.map((input) => (
-            <ListItem key={input.id}>{makeInput(input)}</ListItem>
+            <MotionListItem
+              key={input.id}
+              variants={{
+                hidden: { opacity: 0, x: -50 },
+                visible: { opacity: 1, x: 0 },
+              }}
+            >
+              {makeInput(input)}
+            </MotionListItem>
           ))}
         </List>
-      </Box>
+      </section>
 
       <Divider variant="middle" />
 
-      <div className="p-2 flex flex-col xs:flex-row flex-wrap justify-end gap-2">
-        <Button variant="contained" color="inherit" onClick={handleClean}>
-          Limpiar
-        </Button>
+      <div className="p-4 flex flex-col xs:flex-row flex-wrap justify-end gap-2">
+        <MotionButton
+          variants={{
+            hidden: { opacity: 0, scale: 0 },
+            visible: { opacity: 1, scale: 1 },
+          }}
+          variant="outlined"
+          color="inherit"
+          href="#search?orderBy=price-asc"
+          title="Quitar filtros"
+          onClick={handleClean}
+        >
+          <FilterAltOffIcon />
+        </MotionButton>
 
-        <Button variant="contained" onClick={handleApply}>
+        <MotionButton
+          variants={{
+            hidden: { opacity: 0, scale: 0 },
+            visible: { opacity: 1, scale: 1 },
+          }}
+          variant="contained"
+          title="Aplicar filtros"
+          onClick={handleApply}
+        >
           Aplicar
-        </Button>
+        </MotionButton>
       </div>
-    </SwipeableDrawer>
+    </MotionSwipeableDrawer>
   );
 }

@@ -1,12 +1,12 @@
-import { useOutletContext } from "react-router";
 import { ChangeEvent, Fragment, useEffect, useMemo, useState } from "react";
+import { useOutletContext } from "react-router";
+import { motion } from "framer-motion";
 
 import {
   ItemData,
   TypeColumnTable,
   TypeContext,
   TypeObjectGeneral,
-  TypeOrder,
 } from "../consts/types";
 
 import {
@@ -28,6 +28,8 @@ import { TextField } from "@mui/material";
 
 import ButtonContinueWp from "./CartView/ButtonContinueWp";
 import EnhancedTableHead from "./CartView/EnhancedTableHead";
+
+type TypeOrder = "asc" | "desc" | undefined;
 
 const cols: TypeColumnTable[] = [
   {
@@ -72,6 +74,9 @@ const cols: TypeColumnTable[] = [
   },
 ];
 
+const MotionTableContainer = motion.create(TableContainer);
+const MotionTableRow = motion.create(TableRow);
+
 export default function CartView() {
   const context: TypeContext = useOutletContext();
   const rows = Object.values(context.cart.value);
@@ -83,8 +88,8 @@ export default function CartView() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  // const emptyRows =
+  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const handleRequestSort = (col: keyof ItemData) => {
     const isAsc = colOrder === col && order === "asc";
@@ -120,8 +125,7 @@ export default function CartView() {
     setSelected(newSelected);
   };
 
-  //@ts-ignore
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -142,14 +146,14 @@ export default function CartView() {
   const visibleRows = useMemo(
     () =>
       [...rows]
-        .sort(cartItemsComparator(colOrder, order))
+        .sort(cartItemsComparator(colOrder, String(order)))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [order, colOrder, page, rowsPerPage, context.cart.value]
   );
 
   //------------------------------
   const makeCell = (col: string, row: ItemData) => {
-    const val = row?.[col as keyof ItemData] || "";
+    const val = row[col as keyof ItemData] ?? "";
     const props: TypeObjectGeneral = {};
     let content = null;
 
@@ -158,13 +162,12 @@ export default function CartView() {
         content = (
           <img
             src={row.img || row?.imgs?.[0] || ""}
-            className="min-w-20  max-w-32 rounded-lg drop-shadow-md"
+            className="min-w-20 max-h-24 rounded-lg drop-shadow-md"
           />
         );
         break;
       case "label":
         props.id = `enhanced-table-checkbox-`;
-        props.padding = "none";
         break;
       case "categoria":
         props.className = "capitalize";
@@ -190,27 +193,29 @@ export default function CartView() {
             className="w-28"
             value={val}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleChangeQtt(e, row.id)
+              handleChangeQtt(Number(e.target.value), row.id)
             }
           />
         );
         break;
 
       default:
-        content = val;
+        content = String(val);
         break;
     }
 
     return (
-      <TableCell {...props} style={{ fontFamily: "monserrat" }}>
-        {content || val || "-"}
+      <TableCell
+        {...props}
+        padding="normal"
+        style={{ fontFamily: "monserrat" }}
+      >
+        {content || String(val) || "-"}
       </TableCell>
     );
   };
 
-  const handleChangeQtt = (e: ChangeEvent<HTMLInputElement>, id: number) => {
-    const qtt = Number(e.target.value);
-
+  const handleChangeQtt = (qtt: number, id: number) => {
     const cart_ = structuredClone(context.cart.value);
     cart_[id].qtt = qtt;
 
@@ -253,8 +258,22 @@ export default function CartView() {
           handleDeleteRows={handleDeleteRows}
         />
 
-        <TableContainer className="flex-grow">
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+        <MotionTableContainer
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                delayChildren: 0.5,
+                staggerChildren: 0.2,
+              },
+            },
+          }}
+          initial="hidden"
+          animate="visible"
+          className="flex-grow"
+        >
+          <Table sx={{ minWidth: 750 }} aria-labelledby="Tabla de articulos">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -270,8 +289,12 @@ export default function CartView() {
                 const isItemSelected = selected.includes(row.id);
 
                 return (
-                  <TableRow
+                  <MotionTableRow
                     key={row.id}
+                    variants={{
+                      hidden: { opacity: 0, x: 50 },
+                      visible: { opacity: 1, x: 0 },
+                    }}
                     hover
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -289,18 +312,23 @@ export default function CartView() {
                     {cols.map((col) => (
                       <Fragment key={col.id}>{makeCell(col.id, row)}</Fragment>
                     ))}
-                  </TableRow>
+                  </MotionTableRow>
                 );
               })}
 
-              {emptyRows > 0 && (
+              {!rows.length && (
                 <TableRow>
-                  <TableCell colSpan={6} />
+                  <TableCell
+                    colSpan={cols.length + 1}
+                    className="font-semibold"
+                  >
+                    Sin elementos para mostrar
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </TableContainer>
+        </MotionTableContainer>
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

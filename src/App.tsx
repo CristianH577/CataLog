@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 
 import { NAV_ITEMS } from "./consts/siteConfig";
 
@@ -7,10 +7,8 @@ import { Route, Routes } from "react-router";
 import Layout from "./layout/Layout";
 import NotFound from "./layout/NotFound";
 
-import { CircularProgress } from "@mui/material";
 import { TypeRoute } from "./consts/types";
 
-// const Home = lazy(() => import("./views/Home"));
 const SearchView = lazy(() => import("./views/SearchView"));
 const ItemView = lazy(() => import("./views/ItemView"));
 const CartView = lazy(() => import("./views/CartView"));
@@ -45,18 +43,7 @@ function App() {
                 key={route.id}
                 path={`${route.href}`}
                 element={
-                  <Suspense
-                    fallback={
-                      <span className="w-full h-screen flex items-center justify-center">
-                        <CircularProgress color="primary" />
-                      </span>
-                    }
-                  >
-                    {
-                      //@ts-ignore
-                      routesComponent[route?.id || "default"]
-                    }
-                  </Suspense>
+                  routesComponent[route.id as keyof typeof routesComponent]
                 }
               />
             );

@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { useOutletContext } from "react-router";
+import { motion } from "framer-motion";
 
 import { ItemData, TypeContext } from "../../consts/types";
 
@@ -27,6 +28,9 @@ type TypeITablePricesProps = {
   itemData: ItemData;
 };
 
+const MotionTableContainer = motion.create(TableContainer);
+const MotionTableRow = motion.create(TableRow);
+
 export default function TablePrices({ itemData }: TypeITablePricesProps) {
   const context: TypeContext = useOutletContext();
   const cart = context.cart.value;
@@ -34,14 +38,19 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
   const qttCart = inCartGlobal ? cart[itemData.id].qtt : 0;
 
   const [qttFix, setQttFix] = useState(0);
+  const [count, setCount] = useState(0);
 
   const handleChangeQttFix = (e: ChangeEvent<HTMLInputElement>) => {
-    const qtt = Number(e.target.value);
+    let qtt = Number(e.target.value);
+    if (qtt < 0) qtt = 0;
 
+    setQttFix(qtt);
+  };
+  const handleBlurQttFix = () => {
     if (itemData?.prices) {
       let price = 0;
       for (const umin in itemData.prices) {
-        if (qtt >= Number(umin)) {
+        if ((qttFix || 1) >= Number(umin)) {
           price = itemData.prices[umin];
         } else {
           break;
@@ -50,7 +59,7 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
       itemData.price = price;
     }
 
-    setQttFix(qtt);
+    setCount(count + 1);
   };
 
   const handleButtonInputCart = () => {
@@ -63,6 +72,11 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
 
     itemData.qtt = qtt_;
 
+    if (qtt_ === 0) {
+      itemData.price = itemData.prices ? itemData.prices[1] : 0;
+    }
+
+    setQttFix(qtt_);
     context?.cart?.add(itemData);
   };
 
@@ -83,8 +97,9 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
               let qtt_ = 0;
               if (!inCart_) qtt_ = qtt;
               itemData.qtt = qtt_;
-              itemData.price = itemData.prices ? itemData.prices[qtt] : 0;
+              itemData.price = itemData.prices ? itemData.prices[qtt_ || 1] : 0;
 
+              setQttFix(qtt_);
               context.cart.add(itemData);
             }}
           />
@@ -97,7 +112,18 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
 
   return (
     <section className="self-center sm:self-end space-y-2 py-2">
-      <article className="flex flex-col gap-2 justify-center items-end sm:gap-4">
+      <motion.article
+        variants={{
+          hidden: { opacity: 0, x: 100 },
+          visible: {
+            opacity: 1,
+            x: 0,
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col gap-2 justify-center items-end sm:gap-4"
+      >
         <span
           className={`${titleColor({
             color: "yellow",
@@ -115,12 +141,29 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
             className="max-w-36"
             value={qttFix || ""}
             onChange={handleChangeQttFix}
+            onBlur={handleBlurQttFix}
           />
           <ButtonCart inCart={inCartGlobal} action={handleButtonInputCart} />
         </div>
-      </article>
-      {itemData?.prices && (
-        <TableContainer className="table-dinamic">
+      </motion.article>
+
+      {itemData.prices ? (
+        <MotionTableContainer
+          variants={{
+            hidden: { opacity: 0, scaleY: 0 },
+            visible: {
+              opacity: 1,
+              scaleY: 1,
+              transition: {
+                delayChildren: 0.5,
+                staggerChildren: 0.2,
+              },
+            },
+          }}
+          initial="hidden"
+          animate="visible"
+          className="table-dinamic overflow-y-hidden"
+        >
           <Table
             size="small"
             aria-label="Tabla de precios"
@@ -136,11 +179,15 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
               </TableRow>
             </TableHead>
 
-            <TableBody>
+            <TableBody className="xs:flex flex-wrap gap-4 justify-center sm:table-row-group">
               {Object.entries(itemData.prices).map(([qtt, price]) => (
-                <TableRow
+                <MotionTableRow
                   key={qtt}
-                  className="max-sm:bg-blue-300/30 sm:hover:bg-violet-500/20"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  className="max-sm:bg-blue-400/20 sm:hover:bg-violet-500/20"
                 >
                   {cols.map((col) => (
                     <TableCell
@@ -151,11 +198,17 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
                       {makeCell(col.id, Number(qtt), price)}
                     </TableCell>
                   ))}
-                </TableRow>
+                </MotionTableRow>
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
+        </MotionTableContainer>
+      ) : (
+        <motion.div
+          initial={{ height: 230 }}
+          animate={{ height: 0 }}
+          className="opacity-0"
+        ></motion.div>
       )}
     </section>
   );

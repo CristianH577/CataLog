@@ -53,7 +53,11 @@ export default function SearchInput({
 
   const handleSearch = () => {
     setInputValue(searchText);
-    navigate(href + "?text=" + searchText);
+    let href_ = href;
+    if (searchText) {
+      href_ += "?text=" + searchText;
+    }
+    navigate(href_);
   };
   const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSearch();
@@ -64,7 +68,6 @@ export default function SearchInput({
   };
   const handleClean = () => {
     setSearchText("");
-    navigate(href + "?text=");
   };
 
   useEffect(() => {
@@ -74,7 +77,7 @@ export default function SearchInput({
   return (
     <Search className={`transition-all ${className}`}>
       <IconButton
-        className="absolute z-10 hover:text-[#FFB457] hover:bg-[#FF705B]/20 transition-all rounded-lg"
+        className="absolute z-10 hover:text-[#FFB457] hover:bg-[#FF705B]/20 transition-all rounded-none"
         onClick={handleSearch}
       >
         <IoSearch />

@@ -36,21 +36,36 @@ export default function ItemsView({
   };
 
   return (
-    <section
-      // columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-      // spacing={{ xs: 2, sm: 3, md: 0 }}
-      // className="mx-sm:max-w-fit max-w-[1400px]"
-      className="mx-sm:max-w-fit max-w-[1400px] grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3"
+    <motion.section
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            delayChildren: 0.1,
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+      initial="hidden"
+      animate="visible"
+      className="max-w-[1500px] w-full grid xs:grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(240px,_260px))] gap-2 sm:gap-4 md:gap-6 lg:gap-8 justify-center"
     >
       {items.map((item: ItemData, i) => (
-        <article
+        <motion.article
           key={i}
-          className="relative rounded-lg hover:shadow-custom shadow-blue-400/50 flex flex-col items-center justify-between p-3"
+          variants={{
+            hidden: { opacity: 0, scale: 0 },
+            visible: {
+              opacity: 1,
+              scale: 1,
+            },
+          }}
+          className="relative rounded-lg hover:shadow-custom shadow-blue-400 flex flex-col items-center justify-between p-3"
         >
-          <motion.a
+          <a
             href={"#itemview?id=" + item.id}
+            title="Ver articulo"
             className="flex flex-col items-center justify-between cursor-pointer xs:max-w-64 h-full w-full"
-            whileTap={{ scale: 1.05 }}
           >
             <div className="xs:h-[200px] sm:h-[250px] w-full">
               <img
@@ -76,18 +91,17 @@ export default function ItemsView({
                 {toPriceFormat(item.price)}
               </span>
             </div>
-          </motion.a>
+          </a>
 
           <ButtonCart
             inCart={item.id in context.cart.value}
             action={() => handleButtonCart(item)}
           />
-        </article>
+        </motion.article>
       ))}
 
       <article className="col-span-full">
         <Button
-          // ref={ref}
           variant="contained"
           className="h-16 place-self-center mt-4"
           style={{ display: items.length < totalItems ? "block" : "none" }}
@@ -96,6 +110,6 @@ export default function ItemsView({
           Mostrar mas
         </Button>
       </article>
-    </section>
+    </motion.section>
   );
 }

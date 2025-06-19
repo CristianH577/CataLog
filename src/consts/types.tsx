@@ -16,7 +16,7 @@ export type ItemData = {
   description?: string;
   price?: number;
   prices?: { [key: number]: number };
-  info?: { [key: string]: any | undefined };
+  info?: { [key: string]: string | number | undefined };
   info_plus?: String[];
   subtotal?: number;
   qtt?: number;
@@ -33,26 +33,26 @@ export type TypeContext = {
 };
 
 export type TypeFilterValues = {
+  apply?: boolean;
+  page: number;
   text: string;
-  apply: boolean;
   orderBy: string;
   categorie: string;
   marca: string;
   medidas: string;
-  price: {
-    min: string | number;
-    max: string | number;
-  };
+  priceMin?: number;
+  priceMax?: number;
 };
 
-export type TypeOrder = "asc" | "desc" | undefined;
-
-export interface TypeInputFilter {
+export type TypeFiltersInput = {
   id: string;
   label: string;
   format: string;
-  items?: { id: string; label: string }[];
-}
+  items?: {
+    id: string;
+    label: string;
+  }[];
+};
 
 export type TypeColumnTable = {
   id: keyof ItemData | string;

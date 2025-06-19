@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
-import SearchInput from "../layout/NavBar/SearchInput";
+import SearchInput from "../components/SearchInput";
 
 import { FILTERS_VALUES_DEFAULT } from "../consts/siteConfig";
 import { DB_ITEMS } from "../consts/databases";
-import {
-  TypeFilterValues,
-  ItemData,
-  TypeObjectGeneral,
-  TypeOrder,
-} from "../consts/types";
+import { TypeFilterValues, ItemData, TypeObjectGeneral } from "../consts/types";
 
-import { cartItemsComparator, findItemImgs } from "../libs/functions";
+import {
+  cartItemsComparator,
+  findItemImgs,
+  getHrefSearch,
+} from "../libs/functions";
 
 import { IconButton } from "@mui/material";
 
@@ -20,37 +19,26 @@ import DrawerFilters from "./SearchView/DrawerFilters";
 import ItemsView from "./SearchView/ItemsView";
 
 import { FaFilter } from "react-icons/fa";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 
 const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   item.img = findItemImgs(item.id)[0];
 
-  // if (!item?.price) {
-  //   let price = Math.random() * 1000;
-  //   if (item?.prices) {
-  //     price = item.prices[1];
-  //   } else {
-  //     price = Math.random() * 1000;
-  //   }
-  //   item.price = price;
-  // }
-
-  // if (!item?.description) item.description = ITEM_DATA_DEFAULT.description;
-
   return item;
 });
 
+const itemsPerView = 5;
+
 export default function SearchView() {
   const { search } = useLocation();
+  const navigate = useNavigate();
 
   const [items, setItems] = useState<ItemData[]>([]);
-  const [openDrawerFilters, setOpenDrawerFilters] = useState(false);
   const [filtersValues, setFiltersValues] = useState<TypeFilterValues>(
     FILTERS_VALUES_DEFAULT
   );
-
-  const handleOpenDrawerFilters = () => {
-    setOpenDrawerFilters(!openDrawerFilters);
-  };
+  const [openDrawerFilters, setOpenDrawerFilters] = useState(false);
+  const [visibleItems, setVisibleItems] = useState<ItemData[]>([]);
 
   const searhItems = () => {
     let items_ = structuredClone(DB_ITEMS_);
@@ -73,40 +61,48 @@ export default function SearchView() {
         ).toLowerCase();
         items_ = items_.filter(
           (item) =>
-            item?.info &&
-            item.info?.[filterKey] &&
-            item.info[filterKey].toLowerCase().includes(filter_value)
+            item.info &&
+            item.info[filterKey] &&
+            String(item.info[filterKey]).toLowerCase().includes(filter_value)
         );
       }
     });
 
-    if (filtersValues?.price?.min || filtersValues?.price?.max) {
-      const min = Number(filtersValues?.price?.min);
-      const max = Number(filtersValues?.price?.max);
-      items_ = items_.filter(
-        (item) =>
-          (min && Number(item.price) >= min) ||
-          (max && Number(item.price) <= max)
-      );
+    if (filtersValues?.priceMin) {
+      const min = Number(filtersValues?.priceMin);
+      items_ = items_.filter((item) => {
+        return Number(item.price) >= min;
+      });
+    }
+    if (filtersValues?.priceMax) {
+      const max = Number(filtersValues?.priceMax);
+      items_ = items_.filter((item) => {
+        return Number(item.price) <= max;
+      });
     }
 
     if (filtersValues?.text) {
+      const text_ = filtersValues.text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
       items_ = items_.filter((item) =>
         JSON.stringify(item)
           .toLowerCase()
-          .includes(filtersValues.text.toLowerCase())
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .includes(text_.toLowerCase())
       );
     }
 
-    if (filtersValues?.orderBy && filtersValues.orderBy !== "id-asc") {
-      const [col, order] = filtersValues.orderBy.split("-") as [
-        string,
-        TypeOrder
-      ];
+    if (filtersValues?.orderBy) {
+      const [col, order] = filtersValues.orderBy.split("-");
       items_.sort(cartItemsComparator(col, order));
     }
 
     setItems(items_);
+    setVisibleItems(items_.slice(0, itemsPerView * filtersValues.page));
   };
 
   const handleSearchInputChange = (text: string) => {
@@ -115,27 +111,37 @@ export default function SearchView() {
     setFiltersValues(filters_values_);
   };
 
-  //paginacion
-  const [totalVisibleItems, setTotalVisibleItems] = useState(10);
-  const visibleItems = items.slice(0, totalVisibleItems);
-
   const showMoreItems = () => {
-    setTotalVisibleItems(totalVisibleItems + 10);
+    let href = getHrefSearch(filtersValues);
+    if (href) {
+      href += "&";
+    } else {
+      href += "?";
+    }
+    href += "page=" + (Number(filtersValues.page) + 1);
+    navigate(href);
   };
 
   useEffect(() => {
+    const filters_values_ = structuredClone(FILTERS_VALUES_DEFAULT);
+
     if (search) {
       const params = new URLSearchParams(search);
       const paramsObj: TypeObjectGeneral = {};
-      Array.from(params.entries()).map(([k, v]) => (paramsObj[k] = v));
+      Array.from(params.entries()).map(
+        ([k, v]) => (paramsObj[k] = v.replace(/%/g, " "))
+      );
 
-      if ("text" in paramsObj) {
-        const filters_values_ = structuredClone(filtersValues);
-        filters_values_.text = String(paramsObj.text);
-
-        setFiltersValues(filters_values_);
-      }
+      Object.keys(paramsObj).forEach((key) => {
+        if (filters_values_.hasOwnProperty(key)) {
+          // @ts-ignore
+          filters_values_[key] = paramsObj[key];
+          filters_values_.apply = true;
+        }
+      });
     }
+
+    setFiltersValues(filters_values_);
   }, [search]);
 
   useEffect(searhItems, [filtersValues]);
@@ -150,22 +156,31 @@ export default function SearchView() {
         />
 
         <IconButton
-          color={filtersValues.apply ? "warning" : "default"}
-          onClick={handleOpenDrawerFilters}
+          color="inherit"
+          href="#search?orderBy=price-asc"
+          title="Quitar filtros"
+        >
+          <FilterAltOffIcon />
+        </IconButton>
+
+        <IconButton
+          color={filtersValues.apply ? "warning" : "secondary"}
+          onClick={() => setOpenDrawerFilters(true)}
         >
           <FaFilter />
         </IconButton>
 
         <DrawerFilters
-          openDrawer={openDrawerFilters}
-          handleOpen={handleOpenDrawerFilters}
+          isOpen={openDrawerFilters}
+          setIsOpen={setOpenDrawerFilters}
           filtersValues={filtersValues}
-          setFiltersValues={setFiltersValues}
         />
       </article>
 
-      <p className="text-sm text-neutral-400">
-        Los precios pueden no estar actualizados
+      <p className="text-sm text-neutral-400 text-center">
+        Total: {items.length}
+        <br />
+        Los precios pueden no estar actualizados.
       </p>
 
       {items.length < 1 ? (

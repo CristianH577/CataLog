@@ -25,7 +25,7 @@ dist-ssr
 
 src/components/Component.tsx
 /z
-src/PDF
+/PDF
 
 src/views/Home
 src/views/Home.tsx

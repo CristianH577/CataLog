@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 
-import { ItemData, TypeColumnTable, TypeOrder } from "../../consts/types";
+import { ItemData, TypeColumnTable } from "../../consts/types";
 
 import { visuallyHidden } from "@mui/utils";
 import Box from "@mui/material/Box";
@@ -14,7 +14,7 @@ type TypeEnhancedTableProps = {
   numSelected: number;
   onRequestSort: (property: keyof ItemData) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
-  order: TypeOrder;
+  order?: "asc" | "desc";
   orderCol: string;
   rowCount: number;
   cols: TypeColumnTable[];

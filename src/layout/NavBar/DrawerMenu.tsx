@@ -1,11 +1,11 @@
+import { motion } from "framer-motion";
+
 import { LINKS_CONTACT, NAV_ITEMS } from "../../consts/siteConfig";
 
 import { titleColor } from "../../libs/tvs";
 
 import {
-  Box,
   Divider,
-  Link,
   List,
   ListItem,
   ListItemButton,
@@ -18,18 +18,44 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 
 import { SVGLogo } from "../../assets/svgs/SVGLogo";
 
+const MotionListItem = motion.create(ListItem);
+
 export default function DrawerMenu({
   openMenu = false,
   handleOpen = () => {},
   cartLength = 0,
 }) {
   return (
-    <SwipeableDrawer open={openMenu} onClose={handleOpen} onOpen={handleOpen}>
-      <Box sx={{ width: 220 }} role="presentation" onClick={handleOpen}>
-        <Link
+    <SwipeableDrawer
+      open={openMenu}
+      onClose={handleOpen}
+      onOpen={handleOpen}
+      className=""
+      classes={{
+        paper: "w-full xs:max-w-54",
+      }}
+    >
+      <motion.section
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              delayChildren: 0.1,
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+        initial="hidden"
+        animate={openMenu ? "visible" : "hidden"}
+        onClick={handleOpen}
+      >
+        <motion.a
+          variants={{
+            hidden: { opacity: 0, y: -50 },
+            visible: { opacity: 1, y: 0 },
+          }}
           href="#"
-          className="flex gap-1 px-4 py-2 drop-shadow-sm"
-          underline="none"
+          className="flex gap-1 p-4 pb-2"
         >
           <SVGLogo size={0.5} />
           <span
@@ -39,13 +65,21 @@ export default function DrawerMenu({
           >
             Cata-Log
           </span>
-        </Link>
+        </motion.a>
 
         <Divider variant="middle" />
 
         <List>
           {NAV_ITEMS.map((item) => (
-            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
+            <MotionListItem
+              key={item.id}
+              variants={{
+                hidden: { opacity: 0, x: -50 },
+                visible: { opacity: 1, x: 0 },
+              }}
+              disablePadding
+              className="hover:shadow-sm"
+            >
               <ListItemButton
                 component="a"
                 href={"#" + item.href}
@@ -62,17 +96,22 @@ export default function DrawerMenu({
                   }
                 />
               </ListItemButton>
-            </ListItem>
+            </MotionListItem>
           ))}
         </List>
 
-        <Divider />
+        <Divider variant="middle" />
 
         <List>
           {LINKS_CONTACT.map((item) => (
-            <ListItem
+            <MotionListItem
               key={item.label}
+              variants={{
+                hidden: { opacity: 0, x: -50 },
+                visible: { opacity: 1, x: 0 },
+              }}
               disablePadding
+              className="hover:shadow-sm"
               secondaryAction={
                 <FaExternalLinkAlt className="text-neutral-500" />
               }
@@ -84,10 +123,10 @@ export default function DrawerMenu({
 
                 <ListItemText primary={item.label} />
               </ListItemButton>
-            </ListItem>
+            </MotionListItem>
           ))}
         </List>
-      </Box>
+      </motion.section>
     </SwipeableDrawer>
   );
 }

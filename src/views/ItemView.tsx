@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { motion } from "framer-motion";
 
 import { DB_ITEMS } from "../consts/databases";
 import { ITEM_DATA_DEFAULT } from "../consts/siteConfig";
@@ -16,7 +17,7 @@ import ImagesSection from "./ItemView/ImagesSection";
 export default function ItemView() {
   const { search } = useLocation();
 
-  const [itemData, setItemData] = useState({ ...ITEM_DATA_DEFAULT });
+  const [itemData, setItemData] = useState<ItemData>({ ...ITEM_DATA_DEFAULT });
 
   useEffect(() => {
     if (search) {
@@ -28,12 +29,10 @@ export default function ItemView() {
         const find: ItemData | undefined = DB_ITEMS.find(
           (item) => item.id === Number(paramsObj.id)
         );
+
         if (find) {
           const srcs = findItemImgs(find.id);
-
           if (srcs) find.imgs = srcs;
-
-          //@ts-ignore
           setItemData({ ...itemData, ...find });
         }
       }
@@ -42,14 +41,24 @@ export default function ItemView() {
 
   return (
     <main className="gap-2 p-2 sm:p-4 max-w-3xl place-self-center">
-      <h1
-        className={`h- ps-4 pb-2 lg:pb-4 ${titleColor({
+      <motion.h1
+        variants={{
+          hidden: { opacity: 0, x: "50%" },
+          visible: {
+            opacity: 1,
+            x: 0,
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 1 }}
+        className={`ps-4 pb-2 ${titleColor({
           color: "blue",
           size: "lg",
         })}`}
       >
         {itemData.label}
-      </h1>
+      </motion.h1>
 
       <Divider />
 
@@ -61,25 +70,34 @@ export default function ItemView() {
 
       <Divider variant="middle" />
 
-      <section className="p-2">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="p-2"
+      >
         <h2 className="font-semibold text-xl">Cacteristicas</h2>
 
         <ul>
-          {Object.entries(itemData.info).map(([key, value]) => (
-            <li key={key}>
-              <span className="capitalize font-semibold">{key}</span>: {value}
-            </li>
-          ))}
+          {itemData.info &&
+            Object.entries(itemData.info).map(([key, value]) => (
+              <li key={key}>
+                <span className="capitalize font-semibold">{key}</span>: {value}
+              </li>
+            ))}
         </ul>
-      </section>
+      </motion.section>
 
       <Divider variant="middle" />
 
-      <section className="p-2">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="p-2"
+      >
         <h2 className="font-semibold text-xl">Descripcion</h2>
 
         <p>{itemData.description}</p>
-      </section>
+      </motion.section>
     </main>
   );
 }

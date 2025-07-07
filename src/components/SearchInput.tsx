@@ -78,6 +78,7 @@ export default function SearchInput({
     <Search className={`transition-all ${className}`}>
       <IconButton
         className="absolute z-10 hover:text-[#FFB457] hover:bg-[#FF705B]/20 transition-all rounded-none"
+        title="Buscar"
         onClick={handleSearch}
       >
         <IoSearch />
@@ -90,6 +91,7 @@ export default function SearchInput({
           value: searchText,
           onChange: handlechange,
           name: "search-text",
+          title: "Buscar...",
         }}
         onKeyDown={handleEnter}
       />
@@ -97,6 +99,7 @@ export default function SearchInput({
       <IconButton
         size="small"
         className="absolute z-10 right-1 top-1.5"
+        title="Borrar busqueda"
         onClick={handleClean}
       >
         <FaRegCircleXmark />

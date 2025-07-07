@@ -51,7 +51,7 @@ export default function ItemView() {
         }}
         initial="hidden"
         animate="visible"
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.5 }}
         className={`ps-4 pb-2 ${titleColor({
           color: "blue",
           size: "lg",

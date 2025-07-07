@@ -9,6 +9,7 @@ import { titleColor } from "../../libs/tvs";
 import { Button } from "@mui/material";
 
 import ButtonCart from "../../components/ButtonCart";
+import ImageCustom from "../../components/ImageCustom";
 
 type TypeItemsViewProps = {
   items: ItemData[];
@@ -65,14 +66,17 @@ export default function ItemsView({
           <a
             href={"#itemview?id=" + item.id}
             title="Ver articulo"
-            className="flex flex-col items-center justify-between cursor-pointer xs:max-w-64 h-full w-full"
+            className="flex flex-col items-center justify-between cursor-pointer xs:max-w-64 w-"
           >
-            <div className="xs:h-[200px] sm:h-[250px] w-full">
-              <img
-                src={item.img}
-                className="drop-shadow-md rounded-lg h-full object-contain place-self-center"
-              />
-            </div>
+            <ImageCustom
+              src={item.img}
+              className="drop-shadow-md rounded-lg object-contain w-full h-full"
+              classes={{
+                wrapper: "xs:h-[200px] sm:h-[250px] w-full flex items-center",
+              }}
+              width={250}
+              height={250}
+            />
 
             <div className="flex flex-col items-center p-4">
               <h3 className="text-sm capitalize text-neutral-400">
@@ -105,6 +109,7 @@ export default function ItemsView({
           variant="contained"
           className="h-16 place-self-center mt-4"
           style={{ display: items.length < totalItems ? "block" : "none" }}
+          title="Mostrar mas artículos"
           onClick={showMoreItems}
         >
           Mostrar mas

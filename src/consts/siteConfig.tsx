@@ -18,10 +18,15 @@ export const LINKS_CONTACT = [
     id: "wp",
     icon: FaWhatsapp,
     label: "Whatsapp",
-    href: "https://api.whatsapp.com/send?phone=543813545903",
+    href: "https://api.whatsapp.com/send?phone=543813545903&text=Hola. Me interesa tener un catalogo online.",
   },
   { id: "fb", icon: FaFacebook, label: "Facebook", href: "" },
-  { id: "ig", icon: FaInstagram, label: "Instagram", href: "" },
+  {
+    id: "ig",
+    icon: FaInstagram,
+    label: "Instagram",
+    href: "https://www.instagram.com/verde_ave/",
+  },
 ];
 
 export const FILTERS_INPUTS = [

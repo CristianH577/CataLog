@@ -32,7 +32,7 @@ export default function Navbar({ cartLength = 0 }) {
   return (
     <AppBar
       position="sticky"
-      className="bg-gradient-to-b bg-transparent from-primary-2 to-primary/80"
+      className="bg-gradient-to-b from-primary-2 to-primary/80"
     >
       <MotionToolbar
         variants={{
@@ -95,10 +95,7 @@ export default function Navbar({ cartLength = 0 }) {
         <IconButton
           className="text-tertiary hover:text-white hover:bg-green-400/50"
           title={`Ir a ${button_whatsapp.label}`}
-          href={
-            button_whatsapp.href +
-            "&text=Hola. Me interesa tener un catalogo online."
-          }
+          href={button_whatsapp.href}
           target="_blank"
           rel="noreferrer"
         >

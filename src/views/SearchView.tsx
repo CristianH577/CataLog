@@ -165,6 +165,7 @@ export default function SearchView() {
 
         <IconButton
           color={filtersValues.apply ? "warning" : "secondary"}
+          title="Abrir filtros"
           onClick={() => setOpenDrawerFilters(true)}
         >
           <FaFilter />

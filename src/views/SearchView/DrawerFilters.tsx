@@ -194,7 +194,11 @@ export default function DrawerFilters({
             Filtros
           </motion.div>
 
-          <IconButton className="absolute top-1.5 right-2" onClick={onClose}>
+          <IconButton
+            className="absolute top-1.5 right-2"
+            title="Cerrar filtros"
+            onClick={onClose}
+          >
             <IoIosCloseCircleOutline />
           </IconButton>
         </div>

@@ -58,7 +58,7 @@ export default function ButtonContinueWp({
       size="large"
       variant="contained"
       endIcon={<FaWhatsapp />}
-      title="Ir a wp"
+      title="Continuar por WhatsApp"
       onClick={handleSend}
     >
       Continuar por

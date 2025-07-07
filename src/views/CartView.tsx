@@ -28,6 +28,7 @@ import { TextField } from "@mui/material";
 
 import ButtonContinueWp from "./CartView/ButtonContinueWp";
 import EnhancedTableHead from "./CartView/EnhancedTableHead";
+import ImageCustom from "../components/ImageCustom";
 
 type TypeOrder = "asc" | "desc" | undefined;
 
@@ -160,9 +161,12 @@ export default function CartView() {
     switch (col) {
       case "img":
         content = (
-          <img
+          <ImageCustom
             src={row.img || row?.imgs?.[0] || ""}
-            className="min-w-20 max-h-24 rounded-lg drop-shadow-md"
+            alt={"Preview de " + row.label}
+            className="rounded-lg drop-shadow-md h-full min-w-20 max-h-24 object-contain"
+            width={165}
+            height={96}
           />
         );
         break;

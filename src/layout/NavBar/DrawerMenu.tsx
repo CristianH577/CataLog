@@ -55,6 +55,7 @@ export default function DrawerMenu({
             visible: { opacity: 1, y: 0 },
           }}
           href="#"
+          title="Ir al inicio"
           className="flex gap-1 p-4 pb-2"
         >
           <SVGLogo size={0.5} />
@@ -83,6 +84,7 @@ export default function DrawerMenu({
               <ListItemButton
                 component="a"
                 href={"#" + item.href}
+                title={"Ir a " + item.label}
                 className="min-h-[48px] px-[20px]"
               >
                 <ListItemIcon className="min-w-0 justify-center me-6">
@@ -116,7 +118,12 @@ export default function DrawerMenu({
                 <FaExternalLinkAlt className="text-neutral-500" />
               }
             >
-              <ListItemButton className="min-h-[48px] px-[20px]">
+              <ListItemButton
+                component="a"
+                href={item.href}
+                title={"Ir a " + item.label}
+                className="min-h-[48px] px-[20px]"
+              >
                 <ListItemIcon className="min-w-0 justify-center me-6">
                   <item.icon size={22} />
                 </ListItemIcon>

@@ -11,7 +11,7 @@ export default function ButtonCart({
     <Button
       variant="contained"
       color={inCart ? "success" : "primary"}
-      className={`group text-2xl${className ? " " + className : ""} ${
+      className={`group/button text-2xl${className ? " " + className : ""} ${
         inCart
           ? "hover:text-red-600 hover:bg-red-500/20"
           : "hover:text-blue-600 hover:bg-blue-500/20"
@@ -22,8 +22,8 @@ export default function ButtonCart({
     >
       {inCart ? (
         <>
-          <FaShoppingCart className="group-hover:hidden" />
-          <FaCartArrowDown className="hidden group-hover:block" />
+          <FaShoppingCart className="group-hover/button:hidden" />
+          <FaCartArrowDown className="hidden group-hover/button:block" />
         </>
       ) : (
         <FaCartPlus />

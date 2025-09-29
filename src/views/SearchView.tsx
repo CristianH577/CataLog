@@ -13,7 +13,7 @@ import {
   getHrefSearch,
 } from "../libs/functions";
 
-import { IconButton } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 
 import DrawerFilters from "./SearchView/DrawerFilters";
 import ItemsView from "./SearchView/ItemsView";
@@ -27,7 +27,7 @@ const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   return item;
 });
 
-const itemsPerView = 5;
+const itemsPerView = 4;
 
 export default function SearchView() {
   const { search } = useLocation();
@@ -155,21 +155,33 @@ export default function SearchView() {
           setInputValue={handleSearchInputChange}
         />
 
-        <IconButton
-          color="inherit"
-          href="#search?orderBy=price-asc"
-          title="Quitar filtros"
-        >
-          <FilterAltOffIcon />
-        </IconButton>
+        <ButtonGroup variant="contained">
+          <Button
+            color="inherit"
+            href="#search?orderBy=price-asc"
+            title="Quitar filtros"
+            sx={{
+              paddingLeft: "0",
+              paddingRight: "0",
+              minWidth: "2.5rem",
+            }}
+          >
+            <FilterAltOffIcon />
+          </Button>
 
-        <IconButton
-          color={filtersValues.apply ? "warning" : "secondary"}
-          title="Abrir filtros"
-          onClick={() => setOpenDrawerFilters(true)}
-        >
-          <FaFilter />
-        </IconButton>
+          <Button
+            color={filtersValues.apply ? "warning" : "secondary"}
+            title="Abrir filtros"
+            sx={{
+              paddingLeft: "0",
+              paddingRight: "0",
+              minWidth: "2.5rem",
+            }}
+            onClick={() => setOpenDrawerFilters(true)}
+          >
+            <FaFilter className="w-5 h-fit" />
+          </Button>
+        </ButtonGroup>
 
         <DrawerFilters
           isOpen={openDrawerFilters}

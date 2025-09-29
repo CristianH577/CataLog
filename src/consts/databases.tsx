@@ -303,7 +303,7 @@ export const DB_ITEMS = [
     label: "Gaseosa",
     categoria: "bebidas",
     info: {
-      marca: "Sssssss",
+      marca: "Gas Osa",
       medidas: "350cm3",
       sabor: "Lechuga",
     },

@@ -228,7 +228,7 @@ export default function DrawerFilters({
             hidden: { opacity: 0, scale: 0 },
             visible: { opacity: 1, scale: 1 },
           }}
-          variant="outlined"
+          variant="contained"
           color="inherit"
           href="#search?orderBy=price-asc"
           title="Quitar filtros"

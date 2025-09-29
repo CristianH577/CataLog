@@ -120,8 +120,10 @@ export default function DrawerMenu({
             >
               <ListItemButton
                 component="a"
-                href={item.href}
+                href={item.href || "#"}
                 title={"Ir a " + item.label}
+                target={item.href ? "_blank" : "_self"}
+                rel="noopener noreferrer"
                 className="min-h-[48px] px-[20px]"
               >
                 <ListItemIcon className="min-w-0 justify-center me-6">

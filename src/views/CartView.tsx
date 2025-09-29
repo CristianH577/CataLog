@@ -136,10 +136,15 @@ export default function CartView() {
   };
 
   const handleDeleteRows = () => {
-    const cart = structuredClone(context.cart.value);
-    selected.forEach((id) => {
-      if (id in cart) delete cart[id];
-    });
+    let cart = structuredClone(context.cart.value);
+
+    if (selected.length === Object.keys(cart).length) {
+      cart = {};
+    } else {
+      selected.forEach((id) => {
+        if (id in cart) delete cart[id];
+      });
+    }
     context.cart.set(cart);
     setSelected([]);
   };
@@ -211,8 +216,8 @@ export default function CartView() {
     return (
       <TableCell
         {...props}
-        padding="normal"
         style={{ fontFamily: "monserrat" }}
+        sx={{ padding: ".5rem" }}
       >
         {content || String(val) || "-"}
       </TableCell>
@@ -322,10 +327,7 @@ export default function CartView() {
 
               {!rows.length && (
                 <TableRow>
-                  <TableCell
-                    colSpan={cols.length + 1}
-                    className="font-semibold"
-                  >
+                  <TableCell colSpan={cols.length + 1} className="italic">
                     Sin elementos para mostrar
                   </TableCell>
                 </TableRow>

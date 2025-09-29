@@ -35,6 +35,7 @@ export default function Navbar({ cartLength = 0 }) {
       className="bg-gradient-to-b from-primary-2 to-primary/80"
     >
       <MotionToolbar
+        className="w-full max-w-[1200px] self-center"
         variants={{
           hidden: { opacity: 0 },
           visible: {

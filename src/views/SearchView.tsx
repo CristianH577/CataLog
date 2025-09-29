@@ -27,7 +27,7 @@ const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   return item;
 });
 
-const itemsPerView = 4;
+const itemsPerView = 6;
 
 export default function SearchView() {
   const { search } = useLocation();
@@ -124,7 +124,7 @@ export default function SearchView() {
 
   useEffect(() => {
     const filters_values_ = structuredClone(FILTERS_VALUES_DEFAULT);
-
+    console.log(search);
     if (search) {
       const params = new URLSearchParams(search);
       const paramsObj: TypeObjectGeneral = {};
@@ -147,7 +147,7 @@ export default function SearchView() {
   useEffect(searhItems, [filtersValues]);
 
   return (
-    <main className="items-center pt-8 px-2 sm:px-4 gap-4 w-full">
+    <main className="self-center items-center pt-8 px-2 sm:px-4 gap-4 w-full !max-w-[1400px]">
       <article className="flex items-center gap-2">
         <SearchInput
           className="border-2 border-neutral-300 hover:border-neutral-400"
@@ -158,7 +158,7 @@ export default function SearchView() {
         <ButtonGroup variant="contained">
           <Button
             color="inherit"
-            href="#search?orderBy=price-asc"
+            href="#search"
             title="Quitar filtros"
             sx={{
               paddingLeft: "0",
@@ -170,7 +170,7 @@ export default function SearchView() {
           </Button>
 
           <Button
-            color={filtersValues.apply ? "warning" : "secondary"}
+            color={filtersValues.apply ? "warning" : "inherit"}
             title="Abrir filtros"
             sx={{
               paddingLeft: "0",

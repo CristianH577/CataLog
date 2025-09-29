@@ -49,7 +49,7 @@ export default function ItemsView({
       }}
       initial="hidden"
       animate="visible"
-      className="max-w-[1600px] w-full grid xs:grid-cols-[repeat(auto-fit,_minmax(200px,_240px))] gap-2 sm:gap-4 md:gap-6 lg:gap-8 justify-center"
+      className="max-w-[1400px] w-full grid xs:grid-cols-[repeat(auto-fit,_minmax(200px,_240px))] gap-2 sm:gap-4 md:gap-6 lg:gap-8 justify-center"
     >
       {items.map((item: ItemData, i) => (
         <motion.article

@@ -22,16 +22,16 @@ export default function Layout() {
       <div className="flex-grow flex flex-col">
         <Suspense
           fallback={
-            <span className="w-full h-screen flex items-center justify-center">
+            <span className="flex-grow w-full h-screen flex items-center justify-center">
               <CircularProgress />
             </span>
           }
         >
           <Outlet context={{ cart: cart }} />
         </Suspense>
-
-        <Footer />
       </div>
+
+      <Footer />
     </div>
   );
 }

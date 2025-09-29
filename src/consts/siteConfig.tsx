@@ -90,9 +90,9 @@ export const ITEM_DATA_DEFAULT = {
 };
 
 export const FILTERS_VALUES_DEFAULT = {
-  apply: true,
+  apply: false,
   page: 1,
-  orderBy: "price-asc",
+  orderBy: "",
   text: "",
   categorie: "",
   marca: "",

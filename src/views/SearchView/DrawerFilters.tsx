@@ -95,15 +95,17 @@ export default function DrawerFilters({
       case "select":
         return (
           <FormControl fullWidth variant="standard">
-            <InputLabel id={id_label}>{input.label}</InputLabel>
+            <InputLabel htmlFor={id_label}>{input.label}</InputLabel>
 
             <Select
-              labelId={id_label}
               id={id_}
               label={input.label}
               name={input.id}
               value={filtersValuesTemp[input.id as keyof TypeFilterValues]}
               onChange={handleSelectFilterChange}
+              inputProps={{
+                id: id_label,
+              }}
             >
               <MenuItem value="">Seleccione un valor</MenuItem>
 
@@ -119,7 +121,9 @@ export default function DrawerFilters({
       case "number":
         return (
           <div>
-            <InputLabel>{input.label}</InputLabel>
+            <p className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-1tkmop-MuiFormLabel-root-MuiInputLabel-root">
+              {input.label}
+            </p>
 
             <div className="xs:flex gap-1">
               {["Min", "Max"].map((key) => {
@@ -131,7 +135,6 @@ export default function DrawerFilters({
                     type="number"
                     className="capitalize"
                     variant="standard"
-                    id={`input-${input.id}-${key}`}
                     label={key}
                     name={`${input.id}-${key}`}
                     value={value ? String(value) : ""}

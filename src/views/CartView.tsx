@@ -255,9 +255,9 @@ export default function CartView() {
   useEffect(scrollTop, [page]);
 
   return (
-    <main className="py-2 sm:py-6">
+    <main className="py-2 sm:py-6 lg:self-center">
       <section
-        className="flex flex-col lg:max-w-[1200px] lg:self-center"
+        className="flex flex-col lg:max-w-[1200px]"
         style={{
           minHeight: 190 + rowsPerPage * 53 + "px",
         }}

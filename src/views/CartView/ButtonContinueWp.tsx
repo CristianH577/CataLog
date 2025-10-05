@@ -59,6 +59,7 @@ export default function ButtonContinueWp({
       variant="contained"
       endIcon={<FaWhatsapp />}
       title="Continuar por WhatsApp"
+      disabled={Object.keys(cart).length < 1}
       onClick={handleSend}
     >
       Continuar por

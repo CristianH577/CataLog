@@ -10,6 +10,7 @@ export default function ButtonCart({
   return (
     <Button
       variant="contained"
+      size="small"
       color={inCart ? "success" : "primary"}
       className={`group/button text-2xl${className ? " " + className : ""} ${
         inCart

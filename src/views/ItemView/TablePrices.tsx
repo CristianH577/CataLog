@@ -111,7 +111,7 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
   };
 
   return (
-    <section className="self-center sm:self-end space-y-2 py-2">
+    <section className="flex flex-col gap-4 items-center">
       <motion.article
         variants={{
           hidden: { opacity: 0, x: 100 },
@@ -122,16 +122,16 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
         }}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-2 justify-center items-end sm:gap-4"
+        className="flex flex-wrap gap-2 justify-center sm:gap-4"
       >
-        <span
+        <div
           className={`${titleColor({
             color: "yellow",
-            size: "lg",
+            size: "md",
           })} `}
         >
           {toPriceFormat(itemData.price)}
-        </span>
+        </div>
 
         <div className="flex gap-3 justify-center items-center">
           <TextField
@@ -169,10 +169,14 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
             aria-label="Tabla de precios"
             className="max-sm:border-separate border-spacing-y-2"
           >
-            <TableHead>
+            <TableHead className="bg-primary text-white">
               <TableRow>
                 {cols.map((col) => (
-                  <TableCell key={col.id} component="th" className="font-bold">
+                  <TableCell
+                    key={col.id}
+                    component="th"
+                    className="font-bold text-white"
+                  >
                     {col.label}
                   </TableCell>
                 ))}
@@ -187,14 +191,10 @@ export default function TablePrices({ itemData }: TypeITablePricesProps) {
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 },
                   }}
-                  className="max-sm:bg-blue-400/20 sm:hover:bg-violet-500/20"
+                  className="max-sm:bg-blue-400/20 sm:hover:bg-primary-1 sm:hover:font-bold sm:even:bg-primary/30"
                 >
                   {cols.map((col) => (
-                    <TableCell
-                      key={col.id + "-" + qtt}
-                      className="first:font-bold"
-                      data-label={col.label}
-                    >
+                    <TableCell key={col.id + "-" + qtt} data-label={col.label}>
                       {makeCell(col.id, Number(qtt), price)}
                     </TableCell>
                   ))}

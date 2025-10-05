@@ -124,7 +124,6 @@ export default function SearchView() {
 
   useEffect(() => {
     const filters_values_ = structuredClone(FILTERS_VALUES_DEFAULT);
-    console.log(search);
     if (search) {
       const params = new URLSearchParams(search);
       const paramsObj: TypeObjectGeneral = {};

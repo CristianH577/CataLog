@@ -40,8 +40,12 @@ export default function ItemView() {
   }, [search]);
 
   return (
-    <main className="gap-2 p-2 sm:p-4 max-w-3xl place-self-center">
-      <motion.h1
+    <main className="gap-4 py-4 p-2 sm:px-4 max-w-2xl lg:max-w-[1200px] place-self-center grid grid-cols-1 lg:grid-cols-2 lg:row-span-2">
+      <ImagesSection imgs={itemData.imgs} />
+
+      <Divider variant="middle" className="sm:hidden" />
+
+      <motion.section
         variants={{
           hidden: { opacity: 0, x: "50%" },
           visible: {
@@ -52,52 +56,59 @@ export default function ItemView() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5 }}
-        className={`ps-4 pb-2 ${titleColor({
-          color: "blue",
-          size: "lg",
-        })}`}
+        className="flex flex-col gap-2 items-center lg:items-start"
       >
-        {itemData.label}
-      </motion.h1>
+        <h1
+          className={`pb-2 ${titleColor({
+            color: "blue",
+            size: "lg",
+          })}`}
+        >
+          {itemData.label}
+        </h1>
 
-      <Divider />
-
-      <ImagesSection imgs={itemData.imgs} />
-
-      <Divider variant="middle" />
-
-      <TablePrices itemData={itemData} />
-
-      <Divider variant="middle" />
-
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="p-2"
-      >
-        <h2 className="font-semibold text-xl">Cacteristicas</h2>
-
-        <ul>
-          {itemData.info &&
-            Object.entries(itemData.info).map(([key, value]) => (
-              <li key={key}>
-                <span className="capitalize font-semibold">{key}</span>: {value}
-              </li>
-            ))}
-        </ul>
+        <TablePrices itemData={itemData} />
       </motion.section>
 
-      <Divider variant="middle" />
+      {itemData.info && (
+        <section className="col-span- space-y-4">
+          <Divider variant="middle" />
 
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="p-2"
-      >
-        <h2 className="font-semibold text-xl">Descripcion</h2>
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col gap-2 items-center"
+          >
+            <h2 className="font-semibold text-xl">Cacteristicas</h2>
 
-        <p>{itemData.description}</p>
-      </motion.section>
+            <ul className="flex flex-wrap gap-4">
+              {itemData.info &&
+                Object.entries(itemData.info).map(([key, value]) => (
+                  <li key={key}>
+                    <span className="capitalize font-semibold">{key}</span>:{" "}
+                    {value}
+                  </li>
+                ))}
+            </ul>
+          </motion.section>
+        </section>
+      )}
+
+      {itemData.description && (
+        <section className="col-span- space-y-4">
+          <Divider variant="middle" />
+
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col gap-2 items-center"
+          >
+            <h2 className="font-semibold text-xl">Descripción</h2>
+
+            <p className="p-2">{itemData.description}</p>
+          </motion.section>
+        </section>
+      )}
     </main>
   );
 }

@@ -49,7 +49,7 @@ export default function ItemsView({
       }}
       initial="hidden"
       animate="visible"
-      className="max-w-[1400px] w-full grid xs:grid-cols-[repeat(auto-fit,_minmax(200px,_240px))] gap-2 sm:gap-4 md:gap-6 lg:gap-8 justify-center"
+      className="w-full grid xs:grid-cols-[repeat(auto-fit,_minmax(200px,1fr))] gap-4 md:gap-6 lg:gap-8 justify-center"
     >
       {items.map((item: ItemData, i) => (
         <motion.article
@@ -61,7 +61,7 @@ export default function ItemsView({
               scale: 1,
             },
           }}
-          className="relative rounded-lg hover:shadow-custom shadow-blue-400 flex flex-col items-center justify-between group/card"
+          className="relative rounded-lg border-3 border-primary-1 hover:shadow-custom shadow-blue-400 flex flex-col items-center justify-between group/card"
         >
           <a
             href={"#itemview?id=" + item.id}
@@ -103,11 +103,11 @@ export default function ItemsView({
             </div>
           </a>
 
-          <div className="w-full flex flex-col items-center">
-            <Divider className="w-4/5 opacity-0 group-hover/card:opacity-100" />
+          <div className="w-full text-center">
+            <Divider variant="middle" />
 
             <ButtonCart
-              className="m-2"
+              className="my-3"
               inCart={item.id in context.cart.value}
               action={() => handleButtonCart(item)}
             />

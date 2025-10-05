@@ -20,6 +20,7 @@ import ItemsView from "./SearchView/ItemsView";
 
 import { FaFilter } from "react-icons/fa";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import Filters from "./SearchView/Filters";
 
 const DB_ITEMS_ = DB_ITEMS.map((item: ItemData) => {
   item.img = findItemImgs(item.id)[0];
@@ -146,8 +147,8 @@ export default function SearchView() {
   useEffect(searhItems, [filtersValues]);
 
   return (
-    <main className="self-center items-center pt-8 px-2 sm:px-4 gap-4 w-full !max-w-[1400px]">
-      <article className="flex items-center gap-2">
+    <main className="self-center items-center pt-8 px-2 sm:px-4 gap-4 w-full !max-w-[1400px] md:flex-row md:items-start">
+      <section className="w-full flex flex-wrap items-center justify-center gap-2 md:hidden">
         <SearchInput
           className="border-2 border-neutral-300 hover:border-neutral-400"
           inputValue={filtersValues.text}
@@ -187,25 +188,33 @@ export default function SearchView() {
           setIsOpen={setOpenDrawerFilters}
           filtersValues={filtersValues}
         />
-      </article>
+      </section>
 
-      <p className="text-sm text-neutral-400 text-center">
-        Total: {items.length}
-        <br />
-        Los precios pueden no estar actualizados.
-      </p>
+      <aside className="hidden md:block top-20 shadow-md border border-neutral-300 rounded-md p-2">
+        <Filters filtersValues={filtersValues} id="md" />
+      </aside>
 
-      {items.length < 1 ? (
-        <div className="font-bold text-center w-full text-3xl">
-          Sin resultados
+      <section className="w-full flex flex-col max-md:text-center gap-4">
+        <div>
+          <h1 className="text-xl font-semibold">Resultados de búsqueda</h1>
+
+          <p className="text-sm text-neutral-400">
+            Total: {items.length}
+            <br />
+            Los precios pueden no estar actualizados.
+          </p>
         </div>
-      ) : (
-        <ItemsView
-          items={visibleItems}
-          totalItems={items.length}
-          showMoreItems={showMoreItems}
-        />
-      )}
+
+        {items.length < 1 ? (
+          <div className="font-bold text-3xl">Sin resultados</div>
+        ) : (
+          <ItemsView
+            items={visibleItems}
+            totalItems={items.length}
+            showMoreItems={showMoreItems}
+          />
+        )}
+      </section>
     </main>
   );
 }
